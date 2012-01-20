@@ -28,6 +28,8 @@ echo -e "tmpfs\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /etc/fstab
 
 grub-install /dev/sda
 
+sed -i -e '/^HOOKS=/s/udev/udev usb/' /etc/mkinitcpio.conf
+
 mkinitcpio -p linux-lts
 
 sed -i -r -e '/^(title|kernel|initrd)/s/-linux/-linux-lts/' menu.lst
