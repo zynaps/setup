@@ -52,24 +52,11 @@ sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
 
 echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 
-pacman -S ntp openssh postfix monit
+pacman -S ntp openssh postfix
 
 postconf -e mydomain=local && postconf -e mynetworks_style=host
 
-mkdir -p /etc/monit.d /var/lib/monit/eventqueue
-echo 'include /etc/monit.d/*' > /etc/monitrc
-cat << EOF | (umask 0077 && cat > /etc/monit.d/main)
-set daemon 60
-set logfile syslog facility log_daemon
-set idfile /var/run/monit.id
-set statefile /var/run/monit.state
-set httpd port 2812 and use address localhost allow localhost
-set mailserver localhost
-set eventqueue basedir /var/lib/monit/eventqueue
-set alert root@localhost
-EOF
-
-sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd postfix monitd)/' /etc/rc.conf
+sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd postfix)/' /etc/rc.conf
 
 pacman -S --needed sudo rsync tmux vim zsh git mercurial nmap socat htop iotop iftop dnsutils whois curl pwgen
 

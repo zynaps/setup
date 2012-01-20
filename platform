@@ -1,3 +1,18 @@
+pacman -S monit
+mkdir -p /etc/monit.d /var/lib/monit/eventqueue
+echo 'include /etc/monit.d/*' > /etc/monitrc
+cat << EOF | (umask 0077 && cat > /etc/monit.d/main)
+set daemon 60
+set logfile syslog facility log_daemon
+set idfile /var/run/monit.id
+set statefile /var/run/monit.state
+set httpd port 2812 and use address localhost allow localhost
+set mailserver localhost
+set eventqueue basedir /var/lib/monit/eventqueue
+set alert root@localhost
+EOF
+sed -i -e '/^DAEMONS=/s/)$/ monitd)/' /etc/rc.conf
+
 cd `mktemp -d`
 cp -a /tmp/setup/files/gitosis-git/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
 sudo -i -u ${SUDO_USER} /bin/zsh -c "cd `pwd` && makepkg -s -c -i"
