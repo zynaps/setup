@@ -9,17 +9,9 @@ pacman -Syy && pacman -S --needed pacman
 
 echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
 
-cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 luks
-
-lvm vgcreate vg /dev/mapper/luks
-
-lvm lvcreate --extents 100%FREE --name root vg
-
-lvm vgchange --available y
-
 mkdir -p /mnt/arch
 
-mkfs.ext4 /dev/vg/root && mkdir -p /mnt/arch && mount /dev/vg/root /mnt/arch
+mkfs.ext4 /dev/sda2 && mkdir -p /mnt/arch && mount /dev/sda2 /mnt/arch
 mkfs.ext4 /dev/sda1 && mkdir -p /mnt/arch/boot && mount /dev/sda1 /mnt/arch/boot
 
 for dir in proc sys dev; do mkdir -p /mnt/arch/$dir && mount --rbind /$dir /mnt/arch/$dir; done
@@ -32,21 +24,15 @@ sed -i -e '/^#Server/s/^#//' /mnt/arch/etc/pacman.d/mirrorlist
 
 chroot /mnt/arch
 
-echo -e "/dev/vg/root\t/\text4\tdefaults\t1\t1" > /etc/fstab
+echo -e "/dev/sda2\t/\text4\tdefaults\t1\t1" > /etc/fstab
 echo -e "/dev/sda1\t/boot\text4\tdefaults\t1\t2" >> /etc/fstab
 echo -e "tmpfs\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /etc/fstab
 
 grub-install /dev/sda
 
-sed -i -e '/^HOOKS=/s/filesystems/encrypt lvm2 filesystems/' /etc/mkinitcpio.conf
-
 mkinitcpio -p linux-lts
 
 sed -i -r -e '/^(title|kernel|initrd)/s/-linux/-linux-lts/' menu.lst
-
-sed -i -e '/^kernel/s/root=\/dev\/sda3/cryptdevice=\/dev\/sda2:root root=\/dev\/vg\/root/' /boot/grub/menu.lst
-
-sed -i -e '/^USELVM=/s/"no"$/"yes"/' /etc/rc.conf
 
 sed -i -e '/^HOSTNAME=/cHOSTNAME="darwin"' /etc/rc.conf
 
