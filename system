@@ -54,11 +54,9 @@ sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
 
 echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 
-pacman -S ntp openssh postfix
+pacman -S ntp openssh
 
-postconf -e mydomain=local && postconf -e mynetworks_style=host
-
-sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd postfix)/' /etc/rc.conf
+sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd)/' /etc/rc.conf
 
 pacman -S --needed sudo rsync tmux vim zsh git mercurial nmap socat htop iotop iftop dnsutils whois curl pwgen
 
