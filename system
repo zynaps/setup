@@ -22,6 +22,10 @@ sed -i -e '/^#Server/s/^#//' /mnt/arch/etc/pacman.d/mirrorlist
 
 chroot /mnt/arch
 
+sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
+
+echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+
 echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /etc/fstab
 echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /etc/fstab
 echo -e "tmpfs\t\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /etc/fstab
@@ -49,10 +53,6 @@ sed -i -e '/^gateway=/cgateway=192.168.1.1' /etc/rc.conf
 sed -i -e '/^DAEMON_LOCALE=/s/"no"$/"yes"/' /etc/rc.conf
 
 sed -i -e '/^TIMEZONE=/cTIMEZONE="Europe/Moscow"' /etc/rc.conf
-
-sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
-
-echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 
 pacman -S ntp openssh
 
