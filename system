@@ -9,8 +9,8 @@ pacman -Syy && pacman -S --needed pacman
 
 echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
 
-mkfs.ext4 /dev/sda2 && mkdir /mnt/arch && mount /dev/sda2 /mnt/arch
-mkfs.ext4 /dev/sda1 && mkdir /mnt/arch/boot && mount /dev/sda1 /mnt/arch/boot
+mkfs.ext4 -L root /dev/sda2 && mkdir /mnt/arch && mount /dev/disk/by-label/root /mnt/arch
+mkfs.ext4 -L boot /dev/sda1 && mkdir /mnt/arch/boot && mount /dev/disk/by-label/boot /mnt/arch/boot
 
 for dir in proc sys dev; do mkdir /mnt/arch/$dir && mount --rbind /$dir /mnt/arch/$dir; done
 
@@ -22,9 +22,9 @@ sed -i -e '/^#Server/s/^#//' /mnt/arch/etc/pacman.d/mirrorlist
 
 chroot /mnt/arch
 
-echo -e "/dev/sda2\t/\text4\tdefaults\t1\t1" > /etc/fstab
-echo -e "/dev/sda1\t/boot\text4\tdefaults\t1\t2" >> /etc/fstab
-echo -e "tmpfs\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /etc/fstab
+echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /etc/fstab
+echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /etc/fstab
+echo -e "tmpfs\t\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /etc/fstab
 
 grub-install /dev/sda
 
@@ -33,6 +33,8 @@ sed -i -e '/^HOOKS=/s/udev/udev usb/' /etc/mkinitcpio.conf
 mkinitcpio -p linux-lts
 
 sed -i -r -e '/^(title|kernel|initrd)/s/-linux/-linux-lts/' menu.lst
+
+sed -i -r -e '/^kernel/s/root=\S+/root=\/dev\/disk\/by-label\/root/' /boot/grub/menu.lst
 
 sed -i -e '/^HOSTNAME=/cHOSTNAME="darwin"' /etc/rc.conf
 
