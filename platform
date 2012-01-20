@@ -1,0 +1,35 @@
+cd `mktemp -d`
+cp -a /tmp/setup/files/gitosis-git/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
+sudo -i -u ${SUDO_USER} /bin/zsh -c "cd `pwd` && makepkg -s -c -i"
+head -1 ~/.ssh/authorized_keys | sudo -H -u git gitosis-init
+cd $OLDPWD
+
+pacman -S postgresql
+mkdir -p /var/lib/postgres && chown -R postgres:postgres /var/lib/postgres
+PWFILE=`mktemp` && pwgen -A1B 16 > ${PWFILE} && chown postgres:postgres ${PWFILE}
+sudo -i -u postgres initdb -A md5 -D /var/lib/postgres/data --locale=${LANG} --pwfile=${PWFILE}
+sed -i -e 's/^/*:*:*:postgres:/' ${PWFILE} && mv ${PWFILE} /root/.pgpass && chown root:root /root/.pgpass
+sed -i -e '/^DAEMONS=/s/)$/ postgresql)/' /etc/rc.conf
+
+pacman -S mysql
+sed -i -e '/^DAEMONS=/s/)$/ mysqld)/' /etc/rc.conf
+
+pacman -S mongodb
+sed -i -e '/^DAEMONS=/s/)$/ mongodb)/' /etc/rc.conf
+
+pacman -S redis
+sed -i -e '/^loglevel/s/verbose$/notice/' /etc/redis.conf
+sed -i -e '/^DAEMONS=/s/)$/ redis)/' /etc/rc.conf
+
+pacman -S zeromq
+
+cd `mktemp -d`
+cp -a /tmp/setup/files/nginx/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
+sudo -i -u ${SUDO_USER} /bin/zsh -c "cd `pwd` && makepkg -s -c -i"
+sed -i -e '/^DAEMONS=/s/)$/ nginx)/' /etc/rc.conf
+cd $OLDPWD
+
+pacman -S ruby libxslt
+echo "gem: --no-ri --no-rdoc" >> ~/.gemrc && chown ${SUDO_USER}:${SUDO_USER} ~/.gemrc
+gem update --system && gem update
+gem install bundler rails

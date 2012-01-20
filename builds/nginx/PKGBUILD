@@ -1,0 +1,69 @@
+pkgname=nginx
+pkgver=1.0.8
+pkgrel=1
+epoch=1
+pkgdesc="High performance HTTP and reverse proxy server"
+arch=('i686' 'x86_64')
+url="http://www.nginx.org/"
+license=('custom:BSD')
+depends=('pcre' 'zlib' 'openssl')
+backup=("etc/conf.d/$pkgname"
+        "etc/$pkgname/$pkgname.conf"
+        "etc/$pkgname/fastcgi.conf"
+        "etc/$pkgname/fastcgi_params"
+        "etc/$pkgname/scgi_params"
+        "etc/$pkgname/uwsgi_params"
+        "etc/$pkgname/mime.types"
+        "etc/$pkgname/win-utf"
+        "etc/$pkgname/koi-win"
+        "etc/$pkgname/koi-utf")
+source=("http://www.nginx.org/download/$pkgname-$pkgver.tar.gz"
+        "$pkgname.conf"
+        "$pkgname.rc"
+        "$pkgname.logrotate")
+md5sums=('1049e5fc6e80339f6ba8668fadfb75f9'
+         'ef9cb224ca841122f38d82ad0eef259f'
+         'db6d14e48e6a6e7bc6624dec0851e2cb'
+         '3d786a68a32443d46bc9b0b47434bc8d')
+
+build() {
+	cd $srcdir/$pkgname-$pkgver
+	./configure --prefix=/usr \
+		--sbin-path=/usr/sbin/$pkgname \
+		--conf-path=/etc/$pkgname/$pkgname.conf \
+		--user=http --group=http \
+		--http-log-path=/var/log/$pkgname/access.log \
+		--error-log-path=/var/log/$pkgname/error.log \
+		--pid-path=/var/run/$pkgname.pid \
+		--lock-path=/var/lock/$pkgname.lock \
+		--http-client-body-temp-path=/var/spool/$pkgname/client \
+		--http-proxy-temp-path=/var/spool/$pkgname/proxy \
+		--http-fastcgi-temp-path=/var/spool/$pkgname/fastcgi \
+		--http-scgi-temp-path=/var/spool/$pkgname/scgi \
+		--http-uwsgi-temp-path=/var/spool/$pkgname/uwsgi \
+		--with-http_stub_status_module
+	make
+}
+
+package() {
+	cd $srcdir/$pkgname-$pkgver
+	make DESTDIR=$pkgdir install
+
+	mkdir -p $pkgdir/usr/share/$pkgname
+	mv $pkgdir/usr/html $pkgdir/usr/share/$pkgname
+
+	install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+
+	rm -f $pkgdir/etc/$pkgname/*.default
+
+	mkdir -p $pkgdir/var/spool/$pkgname
+
+	install -D -m644 $srcdir/$pkgname.conf $pkgdir/etc/$pkgname
+
+	mkdir -p $pkgdir/etc/conf.d
+	echo 'NGINX_ARGS=""' > $pkgdir/etc/conf.d/$pkgname
+
+	install -D -m755 $srcdir/$pkgname.rc $pkgdir/etc/rc.d/$pkgname
+
+	install -D -m644 $srcdir/$pkgname.logrotate $pkgdir/etc/logrotate.d/$pkgname
+}

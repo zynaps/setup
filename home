@@ -1,0 +1,36 @@
+ssh-add -L | (umask 0077 && mkdir -p ~/.ssh && cat > ~/.ssh/authorized_keys)
+
+git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+sed -i -r -e '/^#plugins=/s/^#//' -e '/^plugins=/s/\)$/ bundler\)/' ~/.zshrc
+sed -i -e '/^ZSH_THEME=/s/robbyrussell/gentoo/' ~/.zshrc
+echo "bindkey '^U' backward-kill-line" > ~/.oh-my-zsh/custom/key-bindings.zsh
+echo "setopt noautomenu" > ~/.oh-my-zsh/custom/completion.zsh
+
+cp /tmp/setup/files/tmux.conf ~/.tmux.conf
+
+git config --global user.name `whoami`
+git config --global user.email `whoami`@`hostname`
+git config --global color.ui auto
+
+mkdir -p ~/.vim/{autoload,bundle,colors}
+wget https://raw.github.com/tpope/vim-pathogen/HEAD/autoload/pathogen.vim -P ~/.vim/autoload
+cd ~/.vim/bundle
+git clone git://github.com/tpope/vim-surround.git
+git clone git://github.com/tpope/vim-repeat.git
+git clone git://github.com/tpope/vim-commentary.git
+git clone git://github.com/msanders/snipmate.vim.git
+git clone git://github.com/kien/ctrlp.vim.git
+git clone git://github.com/scrooloose/snipmate-snippets.git ~/.vim/snippets
+rm -rf snipmate.vim/snippets
+git clone git://github.com/now/vim-restore-position.git
+git clone git://github.com/bronson/vim-trailing-whitespace.git
+git clone git://github.com/vim-ruby/vim-ruby.git
+git clone git://github.com/tpope/vim-git.git
+git clone git://github.com/tpope/vim-bundler.git
+git clone git://github.com/tpope/vim-rake.git
+git clone git://github.com/tpope/vim-rails.git
+git clone git://github.com/tpope/vim-haml.git
+wget http://www.vim.org/scripts/download_script.php?src_id=8379 -O ~/.vim/colors/railscasts.vim
+cp /tmp/setup/files/vimrc ~/.vimrc
+vim -c 'call pathogen#helptags()|quit'

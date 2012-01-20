@@ -1,0 +1,97 @@
+passwd root
+ip addr add 192.168.1.2/24 dev eth0 && ip link set eth0 up
+ip route add default via 192.168.1.1
+rc.d start sshd
+
+echo -e 'nameserver 8.8.8.8\nnameserver 8.8.4.4' > /etc/resolv.conf
+
+pacman -Syy && pacman -S --needed pacman
+
+echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
+
+cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 luks
+
+lvm vgcreate vg /dev/mapper/luks
+
+lvm lvcreate --extents 100%FREE --name root vg
+
+lvm vgchange --available y
+
+mkdir -p /mnt/arch
+
+mkfs.ext4 /dev/vg/root && mkdir -p /mnt/arch && mount /dev/vg/root /mnt/arch
+mkfs.ext4 /dev/sda1 && mkdir -p /mnt/arch/boot && mount /dev/sda1 /mnt/arch/boot
+
+for dir in proc sys dev; do mkdir -p /mnt/arch/$dir && mount --rbind /$dir /mnt/arch/$dir; done
+
+mkdir -p /mnt/arch/var/lib/pacman && pacman -r /mnt/arch -Sy base linux-lts base-devel
+
+cp -L /etc/resolv.conf /mnt/arch/etc
+
+sed -i -e '/^#Server/s/^#//' /mnt/arch/etc/pacman.d/mirrorlist
+
+chroot /mnt/arch
+
+echo -e "/dev/vg/root\t/\text4\tdefaults\t1\t1" > /etc/fstab
+echo -e "/dev/sda1\t/boot\text4\tdefaults\t1\t2" >> /etc/fstab
+echo -e "tmpfs\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /etc/fstab
+
+grub-install /dev/sda
+
+sed -i -e '/^HOOKS=/s/filesystems/encrypt lvm2 filesystems/' /etc/mkinitcpio.conf
+
+mkinitcpio -p linux-lts
+
+sed -i -r -e '/^(title|kernel|initrd)/s/-linux/-linux-lts/' menu.lst
+
+sed -i -e '/^kernel/s/root=\/dev\/sda3/cryptdevice=\/dev\/sda2:root root=\/dev\/vg\/root/' /boot/grub/menu.lst
+
+sed -i -e '/^USELVM=/s/"no"$/"yes"/' /etc/rc.conf
+
+sed -i -e '/^HOSTNAME=/cHOSTNAME="darwin"' /etc/rc.conf
+
+sed -i -e '/^# End of file$/i192.168.1.2\tdarwin.local\t\tdarwin\n' /etc/hosts
+
+sed -i -e '/^interface=/cinterface=eth0' /etc/rc.conf
+sed -i -e '/^address=/caddress=192.168.1.2' /etc/rc.conf
+sed -i -e '/^netmask=/cnetmask=255.255.255.0' /etc/rc.conf
+sed -i -e '/^broadcast=/cbroadcast=192.168.1.255' /etc/rc.conf
+sed -i -e '/^gateway=/cgateway=192.168.1.1' /etc/rc.conf
+
+sed -i -e '/^DAEMON_LOCALE=/s/"no"$/"yes"/' /etc/rc.conf
+
+sed -i -e '/^TIMEZONE=/cTIMEZONE="Europe/Moscow"' /etc/rc.conf
+
+sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
+
+echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+
+pacman -S ntp openssh postfix monit
+
+postconf -e mydomain=local && postconf -e mynetworks_style=host
+
+mkdir -p /etc/monit.d /var/lib/monit/eventqueue
+echo 'include /etc/monit.d/*' > /etc/monitrc
+cat << EOF | (umask 0077 && cat > /etc/monit.d/main)
+set daemon 60
+set logfile syslog facility log_daemon
+set idfile /var/run/monit.id
+set statefile /var/run/monit.state
+set httpd port 2812 and use address localhost allow localhost
+set mailserver localhost
+set eventqueue basedir /var/lib/monit/eventqueue
+set alert root@localhost
+EOF
+
+sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd postfix monitd)/' /etc/rc.conf
+
+pacman -S --needed sudo rsync tmux vim zsh git mercurial nmap socat htop iotop iftop dnsutils whois curl pwgen
+
+echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
+echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
+
+useradd -G wheel -m -s /bin/zsh igor && passwd igor && passwd -l root && echo 'igor' > /root/.forward
+
+pacman -Scc
+
+exit

@@ -1,0 +1,19 @@
+set nocompatible
+
+call pathogen#infect()
+
+filetype plugin indent on
+
+syntax on
+colorscheme railscasts
+
+set nomodeline
+set wildmode=longest,list
+set hlsearch highlight=l:Visual
+set scrolloff=4
+set colorcolumn=80
+
+nnoremap <silent> <C-L> <C-L>:nohlsearch<CR>
+
+let g:ctrlp_dotfiles = 0
+let g:ctrlp_by_filename = 1
