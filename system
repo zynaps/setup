@@ -14,7 +14,7 @@ mkfs.ext4 -L boot /dev/sda1 && mkdir /mnt/arch/boot && mount /dev/disk/by-label/
 
 for dir in proc sys dev; do mkdir /mnt/arch/$dir && mount --rbind /$dir /mnt/arch/$dir; done
 
-mkdir -p /mnt/arch/var/lib/pacman && pacman -r /mnt/arch -Sy base linux-lts base-devel
+mkdir -p /mnt/arch/var/lib/pacman && pacman -r /mnt/arch -Sy base linux-lts
 
 cp -L /etc/resolv.conf /mnt/arch/etc
 
@@ -58,7 +58,7 @@ pacman -S ntp openssh
 
 sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd)/' /etc/rc.conf
 
-pacman -S --needed sudo rsync tmux vim zsh git mercurial nmap socat htop iotop iftop dnsutils whois curl pwgen
+pacman -S --needed base-devel sudo rsync tmux vim zsh git nmap socat htop iotop dnsutils whois curl pwgen
 
 echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
