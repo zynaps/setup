@@ -52,7 +52,7 @@ sed -i -e '/^gateway=/cgateway=192.168.1.1' /etc/rc.conf
 
 sed -i -e '/^DAEMON_LOCALE=/s/"no"$/"yes"/' /etc/rc.conf
 
-sed -i -e '/^TIMEZONE=/cTIMEZONE="Europe/Moscow"' /etc/rc.conf
+sed -i -e '/^TIMEZONE=/cTIMEZONE="UTC"' /etc/rc.conf
 
 pacman -S ntp openssh
 
