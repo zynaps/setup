@@ -9,8 +9,8 @@ pacman -Syy && pacman -S --needed pacman
 
 echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
 
-mkfs.ext4 -L root /dev/sda2 && mkdir /mnt/arch && mount /dev/disk/by-label/root /mnt/arch
-mkfs.ext4 -L boot /dev/sda1 && mkdir /mnt/arch/boot && mount /dev/disk/by-label/boot /mnt/arch/boot
+mkfs.ext4 -L root /dev/sda2 && sleep 1 && mkdir /mnt/arch && mount /dev/disk/by-label/root /mnt/arch
+mkfs.ext4 -L boot /dev/sda1 && sleep 1 && mkdir /mnt/arch/boot && mount /dev/disk/by-label/boot /mnt/arch/boot
 
 for dir in proc sys dev; do mkdir /mnt/arch/$dir && mount --rbind /$dir /mnt/arch/$dir; done
 
