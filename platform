@@ -36,6 +36,15 @@ pacman -S redis
 sed -i -e '/^loglevel/s/verbose$/notice/' /etc/redis.conf
 sed -i -e '/^DAEMONS=/s/)$/ redis)/' /etc/rc.conf
 
+pacman -S erlang
+
+sudo -i -u ${SUDO_USER}
+cd `mktemp -d`
+wget https://aur.archlinux.org/packages/ra/rabbitmq/rabbitmq.tar.gz -O - | tar zxf - --strip-components=1
+makepkg -s -c -i
+exit
+sed -i -e '/^DAEMONS=/s/)$/ rabbitmq-server)/' /etc/rc.conf
+
 pacman -S zeromq
 
 cd `mktemp -d`
