@@ -14,7 +14,7 @@ EOF
 sed -i -e '/^DAEMONS=/s/)$/ monitd)/' /etc/rc.conf
 
 cd `mktemp -d`
-cp -a /tmp/setup/files/gitosis-git/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
+cp -a /tmp/setup/builds/gitosis-git/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
 sudo -i -u ${SUDO_USER} /bin/zsh -c "cd `pwd` && makepkg -s -c -i"
 head -1 ~/.ssh/authorized_keys | sudo -H -u git gitosis-init
 cd $OLDPWD
@@ -48,7 +48,7 @@ sed -i -e '/^DAEMONS=/s/)$/ rabbitmq-server)/' /etc/rc.conf
 pacman -S zeromq
 
 cd `mktemp -d`
-cp -a /tmp/setup/files/nginx/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
+cp -a /tmp/setup/builds/nginx/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
 sudo -i -u ${SUDO_USER} /bin/zsh -c "cd `pwd` && makepkg -s -c -i"
 sed -i -e '/^DAEMONS=/s/)$/ nginx)/' /etc/rc.conf
 cd $OLDPWD
