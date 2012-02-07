@@ -13,11 +13,12 @@ set alert root@localhost
 EOF
 sed -i -e '/^DAEMONS=/s/)$/ monitd)/' /etc/rc.conf
 
+sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
-cp -a /tmp/setup/builds/gitosis-git/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
-sudo -i -u ${SUDO_USER} /bin/zsh -c "cd `pwd` && makepkg -s -c -i"
+cp -a /tmp/setup/builds/gitosis-git/*
+makepkg -s -c -i
 head -1 ~/.ssh/authorized_keys | sudo -H -u git gitosis-init
-cd $OLDPWD
+exit
 
 pacman -S postgresql
 mkdir -p /var/lib/postgres && chown -R postgres:postgres /var/lib/postgres
@@ -47,11 +48,12 @@ sed -i -e '/^DAEMONS=/s/)$/ rabbitmq-server)/' /etc/rc.conf
 
 pacman -S zeromq
 
+sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
-cp -a /tmp/setup/builds/nginx/* . && chown -R ${SUDO_USER}:${SUDO_USER} .
-sudo -i -u ${SUDO_USER} /bin/zsh -c "cd `pwd` && makepkg -s -c -i"
+cp -a /tmp/setup/builds/nginx/* .
+makepkg -s -c -i
+exit
 sed -i -e '/^DAEMONS=/s/)$/ nginx)/' /etc/rc.conf
-cd $OLDPWD
 
 pacman -S ruby libxslt
 echo "gem: --no-ri --no-rdoc" >> ~/.gemrc && chown ${SUDO_USER}:${SUDO_USER} ~/.gemrc
