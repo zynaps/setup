@@ -1,3 +1,5 @@
+pacman -S zeromq libxslt
+
 APP_NAME=darwin
 APP_USER_HOME=`useradd -D | grep ^HOME= | cut -d = -f 2`/${APP_NAME}
 APP_PGPASS=`pwgen -A1B 16`

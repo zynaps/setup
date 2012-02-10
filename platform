@@ -46,8 +46,6 @@ makepkg -s -c -i
 exit
 sed -i -e '/^DAEMONS=/s/)$/ rabbitmq-server)/' /etc/rc.conf
 
-pacman -S zeromq
-
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
 cp -a /tmp/setup/builds/nginx/* .
@@ -55,7 +53,7 @@ makepkg -s -c -i
 exit
 sed -i -e '/^DAEMONS=/s/)$/ nginx)/' /etc/rc.conf
 
-pacman -S ruby libxslt
+pacman -S ruby
 echo "gem: --no-ri --no-rdoc" >> ~/.gemrc && chown ${SUDO_USER}:${SUDO_USER} ~/.gemrc
 gem update --system && gem update
 gem install bundler rails
