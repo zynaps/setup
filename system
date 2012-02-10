@@ -9,7 +9,20 @@ pacman -Syy && pacman -S --needed pacman
 
 echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
 
+<% if encrypt %>
+cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 luks
+
+lvm vgcreate vg /dev/mapper/luks
+lvm lvcreate --extents 100%FREE --name root vg
+lvm vgchange --available y
+<% end %>
+
+<% if encrypt %>
+mkfs.ext4 -L root /dev/vg/root && sleep 1 && mkdir /mnt/arch && mount /dev/disk/by-label/root /mnt/arch
+<% else %>
 mkfs.ext4 -L root /dev/sda2 && sleep 1 && mkdir /mnt/arch && mount /dev/disk/by-label/root /mnt/arch
+<% end %>
+
 mkfs.ext4 -L boot /dev/sda1 && sleep 1 && mkdir /mnt/arch/boot && mount /dev/disk/by-label/boot /mnt/arch/boot
 
 for dir in proc sys dev; do mkdir /mnt/arch/$dir && mount --rbind /$dir /mnt/arch/$dir; done
@@ -34,11 +47,23 @@ grub-install /dev/sda
 
 sed -i -e '/^HOOKS=/s/udev/udev usb/' /etc/mkinitcpio.conf
 
+<% if encrypt %>
+sed -i -e '/^HOOKS=/s/filesystems/encrypt lvm2 filesystems/' /etc/mkinitcpio.conf
+<% end %>
+
 mkinitcpio -p linux-lts
 
 sed -i -r -e '/^(title|kernel|initrd)/s/-linux/-linux-lts/' /boot/grub/menu.lst
 
+<% if encrypt %>
+sed -i -r -e '/^kernel/s/root=/cryptdevice=\/dev\/disk\/by-label\/root:root root=/' /boot/grub/menu.lst
+<% end %>
+
 sed -i -r -e '/^kernel/s/root=\S+/root=\/dev\/disk\/by-label\/root/' /boot/grub/menu.lst
+
+<% if encrypt %>
+sed -i -e '/^USELVM=/s/"no"$/"yes"/' /etc/rc.conf
+<% end %>
 
 sed -i -e '/^HOSTNAME=/cHOSTNAME="darwin"' /etc/rc.conf
 
