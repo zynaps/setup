@@ -1,5 +1,5 @@
 pkgname=nginx
-pkgver=1.0.8
+pkgver=1.0.12
 pkgrel=1
 epoch=1
 pkgdesc="High performance HTTP and reverse proxy server"
@@ -21,7 +21,7 @@ source=("http://www.nginx.org/download/$pkgname-$pkgver.tar.gz"
         "$pkgname.conf"
         "$pkgname.rc"
         "$pkgname.logrotate")
-md5sums=('1049e5fc6e80339f6ba8668fadfb75f9'
+md5sums=('d0ceefeb2a68ecb19e78ee894a5b52a3'
          'ef9cb224ca841122f38d82ad0eef259f'
          'db6d14e48e6a6e7bc6624dec0851e2cb'
          '3d786a68a32443d46bc9b0b47434bc8d')
