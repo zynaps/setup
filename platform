@@ -19,6 +19,8 @@ cd `mktemp -d`
 wget https://aur.archlinux.org/packages/ra/rabbitmq/rabbitmq.tar.gz -O - | tar zxf - --strip-components=1
 makepkg -s -c -i
 exit
+echo '[].' > /etc/rabbitmq/enabled_plugins && chown rabbitmq:rabbitmq /etc/rabbitmq/enabled_plugins
+rabbitmq-plugins enable rabbitmq_management
 sed -i -e '/^DAEMONS=/s/)$/ rabbitmq-server)/' /etc/rc.conf
 
 sudo -i -u ${SUDO_USER}
