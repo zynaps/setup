@@ -1,34 +1,9 @@
-pacman -S monit
-mkdir -p /etc/monit.d /var/lib/monit/eventqueue
-echo 'include /etc/monit.d/*' > /etc/monitrc
-cat << EOF | (umask 0077 && cat > /etc/monit.d/main)
-set daemon 60
-set logfile syslog facility log_daemon
-set idfile /var/run/monit.id
-set statefile /var/run/monit.state
-set httpd port 2812 and use address localhost allow localhost
-set mailserver localhost
-set eventqueue basedir /var/lib/monit/eventqueue
-set alert root@localhost
-EOF
-sed -i -e '/^DAEMONS=/s/)$/ monitd)/' /etc/rc.conf
-
-sudo -i -u ${SUDO_USER}
-cd `mktemp -d`
-cp -a /tmp/setup/builds/gitosis-git/*
-makepkg -s -c -i
-head -1 ~/.ssh/authorized_keys | sudo -H -u git gitosis-init
-exit
-
 pacman -S postgresql
 mkdir -p /var/lib/postgres && chown -R postgres:postgres /var/lib/postgres
 PWFILE=`mktemp` && pwgen -A1B 16 > ${PWFILE} && chown postgres:postgres ${PWFILE}
 sudo -i -u postgres initdb -A md5 -D /var/lib/postgres/data --locale=${LANG} --pwfile=${PWFILE}
 sed -i -e 's/^/*:*:*:postgres:/' ${PWFILE} && mv ${PWFILE} /root/.pgpass && chown root:root /root/.pgpass
 sed -i -e '/^DAEMONS=/s/)$/ postgresql)/' /etc/rc.conf
-
-pacman -S mysql
-sed -i -e '/^DAEMONS=/s/)$/ mysqld)/' /etc/rc.conf
 
 pacman -S mongodb
 sed -i -e '/^DAEMONS=/s/)$/ mongodb)/' /etc/rc.conf
