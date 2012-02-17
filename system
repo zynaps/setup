@@ -88,6 +88,8 @@ pacman -S --needed base-devel sudo rsync tmux vim zsh git nmap socat htop iotop 
 echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
 
+echo 'export EDITOR=vim' > /etc/profile.d/editor.sh && chmod +x /etc/profile.d/editor.sh
+
 useradd -G wheel -m -s /bin/zsh igor && passwd igor && passwd -l root
 
 exit
