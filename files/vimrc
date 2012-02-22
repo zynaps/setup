@@ -9,6 +9,7 @@ colorscheme railscasts
 
 set nomodeline
 set wildmode=longest,list
+set shiftround
 set hlsearch highlight=l:Visual
 set scrolloff=4
 
