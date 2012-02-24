@@ -9,6 +9,7 @@ pacman -S mongodb
 sed -i -e '/^DAEMONS=/s/)$/ mongodb)/' /etc/rc.conf
 
 pacman -S redis
+echo "vm.overcommit_memory = 1" > /etc/sysctl.d/overcommit.conf
 sed -i -e '/^loglevel/s/verbose$/notice/' /etc/redis.conf
 sed -i -e '/^DAEMONS=/s/)$/ redis)/' /etc/rc.conf
 
