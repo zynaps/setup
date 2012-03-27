@@ -17,3 +17,5 @@ nnoremap <silent> <C-L> <C-L>:nohlsearch<CR>
 
 let g:ctrlp_dotfiles = 0
 let g:ctrlp_by_filename = 1
+
+autocmd FileType ruby setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
