@@ -18,6 +18,7 @@ wget https://raw.github.com/tpope/vim-pathogen/HEAD/autoload/pathogen.vim -P ~/.
 cd ~/.vim/bundle
 git clone git://github.com/tpope/vim-surround.git
 git clone git://github.com/tpope/vim-repeat.git
+git clone git://github.com/kana/vim-smartinput.git
 git clone git://github.com/tpope/vim-commentary.git
 git clone git://github.com/msanders/snipmate.vim.git
 git clone git://github.com/kien/ctrlp.vim.git
