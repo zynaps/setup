@@ -32,6 +32,6 @@ git clone git://github.com/tpope/vim-bundler.git
 git clone git://github.com/tpope/vim-rake.git
 git clone git://github.com/tpope/vim-rails.git
 git clone git://github.com/tpope/vim-haml.git
-wget http://www.vim.org/scripts/download_script.php?src_id=8379 -O ~/.vim/colors/railscasts.vim
+wget http://www.vim.org/scripts/download_script.php\?src_id=8379 -O ~/.vim/colors/railscasts.vim
 cp /tmp/setup/files/vimrc ~/.vimrc
 vim -c 'call pathogen#helptags()|quit'
