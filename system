@@ -72,7 +72,7 @@ pacman -S ntp openssh
 
 sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd)/' /etc/rc.conf
 
-pacman -S --needed base-devel sudo rsync tmux vim zsh git nmap socat htop iotop dnsutils whois curl pwgen
+pacman -S --needed base-devel sudo rsync tmux vim zsh git nmap socat dnsutils whois curl pwgen
 
 echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
