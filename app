@@ -18,3 +18,4 @@ CREATE DATABASE ${APP_NAME}_test; GRANT ALL PRIVILEGES ON DATABASE ${APP_NAME}_t
 EOF
 mkdir -p /srv/${APP_NAME}
 chown -R ${APP_NAME}:${APP_NAME} /srv/${APP_NAME}
+echo 'God.load "/srv/'${APP_NAME}'/config/*.god"' > /etc/god.d/${APP_NAME}.god
