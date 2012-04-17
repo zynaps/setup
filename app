@@ -4,9 +4,7 @@ APP_NAME=darwin
 APP_USER_HOME=`useradd -D | grep ^HOME= | cut -d = -f 2`/${APP_NAME}
 APP_UID=2001
 APP_PGPASS=`pwgen -A1B 16`
-useradd -u ${APP_UID} -m -s /bin/zsh ${APP_NAME}
-mkdir -p -m 0700 ${APP_USER_HOME}/.ssh
-ssh-add -L | head -n 1 | (umask 0077 && cat > ${APP_USER_HOME}/.ssh/authorized_keys)
+useradd -u ${APP_UID} -m -s /bin/zsh ${APP_NAME} && passwd ${APP_NAME}
 echo "*:*:*:${APP_NAME}:${APP_PGPASS}" | (umask 0077 && cat > ${APP_USER_HOME}/.pgpass)
 chown -R ${APP_NAME}:${APP_NAME} ${APP_USER_HOME}
 cat << EOF | psql -U postgres

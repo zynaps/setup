@@ -1,4 +1,4 @@
-ssh-add -L | (umask 0077 && mkdir -p ~/.ssh && cat > ~/.ssh/authorized_keys)
+mkdir -m 700 -p ~/.ssh && install -m 600 /tmp/setup/files/authorized_keys ~/.ssh
 
 git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
