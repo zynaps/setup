@@ -6,7 +6,6 @@ APP_UID=2001
 APP_PGPASS=`pwgen -A1B 16`
 useradd -u ${APP_UID} -m -s /bin/zsh ${APP_NAME}
 mkdir -p -m 0700 ${APP_USER_HOME}/.ssh
-ssh-keygen -q -t rsa -f ${APP_USER_HOME}/.ssh/id_rsa -N '' -C ${APP_NAME}
 ssh-add -L | head -n 1 | (umask 0077 && cat > ${APP_USER_HOME}/.ssh/authorized_keys)
 echo "*:*:*:${APP_NAME}:${APP_PGPASS}" | (umask 0077 && cat > ${APP_USER_HOME}/.pgpass)
 chown -R ${APP_NAME}:${APP_NAME} ${APP_USER_HOME}
