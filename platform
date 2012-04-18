@@ -42,3 +42,10 @@ echo 'God.load "/etc/god.d/**/*.god"' > /etc/god.conf
 echo 'GOD_ARGS="-c /etc/god.conf"' > /etc/conf.d/god
 install /tmp/setup/files/god.rc /etc/rc.d/god
 sed -i -e '/^DAEMONS=/s/)$/ god)/' /etc/rc.conf
+
+sudo -i -u ${SUDO_USER}
+cd `mktemp -d`
+wget https://aur.archlinux.org/packages/gi/gitosis-git/gitosis-git.tar.gz -O - | tar zxf - --strip-components=1
+makepkg -s -c -i
+exit
+sudo -i -u git gitosis-init < /tmp/setup/files/authorized_keys
