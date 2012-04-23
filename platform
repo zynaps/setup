@@ -32,7 +32,7 @@ exit
 sed -i -e '/^DAEMONS=/s/)$/ nginx)/' /etc/rc.conf
 
 pacman -S ruby
-echo "gem: --no-ri --no-rdoc" >> ~/.gemrc && chown ${SUDO_USER}:${SUDO_USER} ~/.gemrc
+echo "gem: --no-user-install --no-ri --no-rdoc" >> ~/.gemrc && chown ${SUDO_USER}:${SUDO_USER} ~/.gemrc
 gem update --system && gem update
 gem install bundler
 
