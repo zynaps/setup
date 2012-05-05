@@ -79,6 +79,8 @@ echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99ro
 
 echo 'export EDITOR=vim' > /etc/profile.d/editor.sh && chmod +x /etc/profile.d/editor.sh
 
-useradd -G users,wheel -m -s /bin/zsh igor && passwd igor && passwd -l root
+useradd -G users,wheel -m -s /bin/zsh igor && passwd igor
+
+passwd -l root
 
 exit
