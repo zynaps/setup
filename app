@@ -1,4 +1,4 @@
-pacman -S zeromq libxslt
+pacman -S zeromq libxslt imagemagick libpng
 
 APP_UID=2001
 APP_NAME=darwin
