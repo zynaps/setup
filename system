@@ -84,3 +84,5 @@ useradd -G users,wheel -m -s /bin/zsh igor && passwd igor
 passwd -l root
 
 exit
+
+rm -f /mnt/arch/root/.bash_history
