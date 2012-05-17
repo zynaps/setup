@@ -6,6 +6,7 @@ sed -i -r -e '/^#plugins=/s/^#//' -e '/^plugins=/s/\)$/ bundler\)/' ~/.zshrc
 sed -i -e '/^ZSH_THEME=/s/robbyrussell/gentoo/' ~/.zshrc
 echo "bindkey '^U' backward-kill-line" > ~/.oh-my-zsh/custom/key-bindings.zsh
 echo "setopt noautomenu" > ~/.oh-my-zsh/custom/completion.zsh
+echo "setopt nocorrectall" > ~/.oh-my-zsh/custom/correction.zsh
 
 cp /tmp/setup/files/tmux.conf ~/.tmux.conf
 
