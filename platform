@@ -34,6 +34,9 @@ sed -i -e '/^DAEMONS=/s/)$/ nginx)/' /etc/rc.conf
 pacman -S ruby
 echo "gem: --no-user-install --no-ri --no-rdoc" >> ~/.gemrc && chown ${SUDO_USER}:${SUDO_USER} ~/.gemrc
 gem update --system && gem update
+
+echo 'export RUBYOPT=-Ku' > /etc/profile.d/rubyopt.sh && chmod +x /etc/profile.d/rubyopt.sh
+
 gem install bundler
 
 gem install god
