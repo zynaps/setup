@@ -20,7 +20,7 @@ mkfs.ext4 -L boot /dev/sda1 && sleep 1 && mkdir /mnt/arch/boot && mount /dev/dis
 
 for dir in proc sys dev; do mkdir /mnt/arch/$dir && mount --rbind /$dir /mnt/arch/$dir; done
 
-mkdir -p /mnt/arch/var/lib/pacman && pacman -r /mnt/arch -Sy base linux-lts
+mkdir -p /mnt/arch/var/lib/pacman && pacman -r /mnt/arch -Sy base
 
 cp -L /etc/resolv.conf /mnt/arch/etc
 
@@ -44,9 +44,7 @@ sed -i -e '/^HOOKS=/s/udev/udev usb/' /etc/mkinitcpio.conf
 sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 <% end %>
 
-mkinitcpio -p linux-lts
-
-sed -i -r -e '/^(title|kernel|initrd)/s/-linux/-linux-lts/' /boot/grub/menu.lst
+mkinitcpio -p linux
 
 <% if encrypt %>
 sed -i -r -e '/^kernel/s/root=/cryptdevice=\/dev\/sda2:root root=/' /boot/grub/menu.lst
