@@ -13,20 +13,20 @@ echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
 cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 root
 mkfs.ext4 -L root /dev/mapper/root
 <% else %>
-mkfs.ext4 -L root /dev/sda2 && sleep 1 && mkdir /mnt/arch && mount /dev/disk/by-label/root /mnt/arch
+mkfs.ext4 -L root /dev/sda2 && sleep 1 && mount /dev/disk/by-label/root /mnt
 <% end %>
 
-mkfs.ext4 -L boot /dev/sda1 && sleep 1 && mkdir /mnt/arch/boot && mount /dev/disk/by-label/boot /mnt/arch/boot
+mkfs.ext4 -L boot /dev/sda1 && sleep 1 && mkdir /mnt/boot && mount /dev/disk/by-label/boot /mnt/boot
 
-for dir in proc sys dev; do mkdir /mnt/arch/$dir && mount --rbind /$dir /mnt/arch/$dir; done
+for dir in proc sys dev; do mkdir /mnt/$dir && mount --rbind /$dir /mnt/$dir; done
 
-mkdir -p /mnt/arch/var/lib/pacman && pacman -r /mnt/arch -Sy base
+mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base
 
-cp -L /etc/resolv.conf /mnt/arch/etc
+cp -L /etc/resolv.conf /mnt/etc
 
-sed -i -e '/^#Server/s/^#//' /mnt/arch/etc/pacman.d/mirrorlist
+sed -i -e '/^#Server/s/^#//' /mnt/etc/pacman.d/mirrorlist
 
-chroot /mnt/arch
+chroot /mnt
 
 sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
 
@@ -81,4 +81,4 @@ passwd -l root
 
 exit
 
-rm -f /mnt/arch/root/.bash_history
+rm -f /mnt/root/.bash_history
