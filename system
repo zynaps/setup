@@ -5,6 +5,8 @@ rc.d start sshd
 
 echo -e 'nameserver 8.8.8.8\nnameserver 8.8.4.4' > /etc/resolv.conf
 
+echo 'Server = http://mirror.yandex.ru/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+
 pacman -Syy && pacman -S --needed pacman
 
 echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
