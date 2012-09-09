@@ -1,12 +1,11 @@
 echo 'Server = http://mirror.yandex.ru/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
-pacman -Syy && pacman -S --needed pacman
+pacman -Syy --needed pacman
 
 echo -e ",512,83,*\n,,83" | sfdisk -uM -D --quiet /dev/sda
 
 <% if encrypt %>
-cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 root
-mkfs.ext4 -L root /dev/mapper/root
+cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 root && mkfs.ext4 -L root /dev/mapper/root
 <% else %>
 mkfs.ext4 -L root /dev/sda2
 <% end %>
@@ -15,7 +14,7 @@ mount /dev/disk/by-label/root /mnt
 
 mkfs.ext4 -L boot /dev/sda1 && mkdir /mnt/boot && mount /dev/disk/by-label/boot /mnt/boot
 
-for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount --rbind /$dir /mnt/$dir; done
+for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount -R /$dir /mnt/$dir; done
 
 mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base
 
@@ -23,7 +22,7 @@ echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
 echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /mnt/etc/fstab
 echo -e "tmpfs\t\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /mnt/etc/fstab
 
-cp -L /etc/resolv.conf /mnt/etc
+cp -a /etc/resolv.conf /mnt/etc
 
 cp -a /etc/pacman.d/mirrorlist /mnt/etc/pacman.d
 
@@ -63,11 +62,9 @@ sed -i -e '/^TIMEZONE=/cTIMEZONE="UTC"' /etc/rc.conf
 
 pacman-key --init && pacman-key --populate archlinux
 
-pacman -S ntp openssh
+pacman -S ntp openssh base-devel sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd)/' /etc/rc.conf
-
-pacman -S --needed base-devel sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
@@ -79,5 +76,3 @@ passwd -l root
 echo 'export EDITOR=vim' > /etc/profile.d/editor.sh && chmod +x /etc/profile.d/editor.sh
 
 exit
-
-rm -f /mnt/root/.bash_history
