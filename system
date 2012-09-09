@@ -13,8 +13,10 @@ echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
 cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 root
 mkfs.ext4 -L root /dev/mapper/root
 <% else %>
-mkfs.ext4 -L root /dev/sda2 && mount /dev/disk/by-label/root /mnt
+mkfs.ext4 -L root /dev/sda2
 <% end %>
+
+mount /dev/disk/by-label/root /mnt
 
 mkfs.ext4 -L boot /dev/sda1 && mkdir /mnt/boot && mount /dev/disk/by-label/boot /mnt/boot
 
