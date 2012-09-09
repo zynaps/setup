@@ -16,7 +16,7 @@ mkfs.ext4 -L boot /dev/sda1 && mkdir /mnt/boot && mount /dev/disk/by-label/boot 
 
 for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount -R /$dir /mnt/$dir; done
 
-mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base
+mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base grub-bios
 
 echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
 echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /mnt/etc/fstab
@@ -32,8 +32,6 @@ sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
 
 echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 
-grub-install /dev/sda
-
 sed -i -e '/^HOOKS=/s/udev/udev usb/' /etc/mkinitcpio.conf
 
 <% if encrypt %>
@@ -42,11 +40,15 @@ sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
 mkinitcpio -p linux
 
+grub-install --recheck /dev/sda
+
 <% if encrypt %>
-sed -i -r -e '/^kernel/s/root=/cryptdevice=\/dev\/sda2:root root=/' /boot/grub/menu.lst
+sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda2:root"/' /etc/default/grub
 <% end %>
 
-sed -i -r -e '/^kernel/s/root=\S+/root=\/dev\/disk\/by-label\/root/' /boot/grub/menu.lst
+sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
+
+grub-mkconfig -o /boot/grub/grub.cfg
 
 sed -i -e '/^HOSTNAME=/cHOSTNAME="darwin"' /etc/rc.conf
 
