@@ -50,17 +50,16 @@ sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
 
-sed -i -e '/^HOSTNAME=/cHOSTNAME="darwin"' /etc/rc.conf
+echo 'darwin' > /etc/hostname
 
 sed -i -e '/^# End of file$/i192.168.1.2\tdarwin.local\t\tdarwin\n' /etc/hosts
 
-sed -i -e '/^interface=/cinterface=eth0' /etc/rc.conf
-sed -i -e '/^address=/caddress=192.168.1.2' /etc/rc.conf
-sed -i -e '/^netmask=/cnetmask=255.255.255.0' /etc/rc.conf
-sed -i -e '/^broadcast=/cbroadcast=192.168.1.255' /etc/rc.conf
-sed -i -e '/^gateway=/cgateway=192.168.1.1' /etc/rc.conf
+sed -i -e '/^# interface=$/cinterface=eth0' /etc/rc.conf
+sed -i -e '/^# address=$/caddress=192.168.1.2' /etc/rc.conf
+sed -i -e '/^# netmask=$/cnetmask=255.255.255.0' /etc/rc.conf
+sed -i -e '/^# gateway=$/cgateway=192.168.1.1' /etc/rc.conf
 
-sed -i -e '/^TIMEZONE=/cTIMEZONE="UTC"' /etc/rc.conf
+ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 pacman-key --init && pacman-key --populate archlinux
 
