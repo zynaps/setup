@@ -26,6 +26,10 @@ for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount --rbind /$dir /mnt/
 
 mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base
 
+echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
+echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /mnt/etc/fstab
+echo -e "tmpfs\t\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /mnt/etc/fstab
+
 cp -L /etc/resolv.conf /mnt/etc
 
 cp -a /etc/pacman.d/mirrorlist /mnt/etc/pacman.d
@@ -35,10 +39,6 @@ chroot /mnt
 sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
 
 echo 'LANG=en_US.UTF-8' > /etc/locale.conf
-
-echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /etc/fstab
-echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /etc/fstab
-echo -e "tmpfs\t\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /etc/fstab
 
 grub-install /dev/sda
 
