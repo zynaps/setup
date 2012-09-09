@@ -20,7 +20,7 @@ mount /dev/disk/by-label/root /mnt
 
 mkfs.ext4 -L boot /dev/sda1 && mkdir /mnt/boot && mount /dev/disk/by-label/boot /mnt/boot
 
-for dir in proc sys dev; do mkdir /mnt/$dir && mount --rbind /$dir /mnt/$dir; done
+for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount --rbind /$dir /mnt/$dir; done
 
 mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base
 
