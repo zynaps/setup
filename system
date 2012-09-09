@@ -68,6 +68,8 @@ sed -i -e '/^gateway=/cgateway=192.168.1.1' /etc/rc.conf
 
 sed -i -e '/^TIMEZONE=/cTIMEZONE="UTC"' /etc/rc.conf
 
+pacman-key --init && pacman-key --populate archlinux
+
 pacman -S ntp openssh
 
 sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd)/' /etc/rc.conf
