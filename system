@@ -2,7 +2,7 @@ echo 'Server = http://mirror.yandex.ru/archlinux/$repo/os/$arch' > /etc/pacman.d
 
 pacman -Syy && pacman -S --needed pacman
 
-echo -e ",512,83,*\n,,83" | sfdisk -uM --quiet /dev/sda
+echo -e ",512,83,*\n,,83" | sfdisk -uM -D --quiet /dev/sda
 
 <% if encrypt %>
 cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 root
