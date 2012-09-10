@@ -18,7 +18,13 @@ mkfs.ext4 -L boot /dev/sda1 && mkdir /mnt/boot && mount /dev/disk/by-label/boot 
 
 for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount -R /$dir /mnt/$dir; done
 
-mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base grub-bios
+mkdir -p /mnt/var/lib/pacman
+
+pacman -r /mnt -Sy base grub-bios
+pacman -r /mnt -Rn initscripts sysvinit
+pacman -r /mnt -Sy systemd-sysvcompat
+
+mkdir -p /mnt/var/log/journal
 
 echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
 echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /mnt/etc/fstab
@@ -56,7 +62,7 @@ echo 'darwin' > /etc/hostname
 
 sed -i -e '/^# End of file$/i192.168.1.2\tdarwin.local\t\tdarwin\n' /etc/hosts
 
-ln -s /usr/share/zoneinfo/UTC /etc/localtime
+ln -s /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone
 
 pacman-key --init && pacman-key --populate archlinux
 
@@ -75,7 +81,7 @@ EOF
 
 sed -i -e '/^NETWORKS=/cNETWORKS=(static)' /etc/conf.d/netcfg
 
-sed -i -e '/^DAEMONS=/s/ network / net-profiles /;s/)$/ ntpd sshd)/' /etc/rc.conf
+systemctl enable {netcfg,cronie,ntpd,sshd}.service
 
 echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
