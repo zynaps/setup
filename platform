@@ -17,7 +17,7 @@ pacman -S erlang
 
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
-wget https://aur.archlinux.org/packages/ra/rabbitmq/rabbitmq.tar.gz -O - | tar zxf - --strip-components=1
+curl https://aur.archlinux.org/packages/ra/rabbitmq/rabbitmq.tar.gz -o - | tar zxf - --strip-components=1
 makepkg -s -c -i
 exit
 echo '[].' > /etc/rabbitmq/enabled_plugins && chown rabbitmq:rabbitmq /etc/rabbitmq/enabled_plugins
@@ -48,7 +48,7 @@ sed -i -e '/^DAEMONS=/s/)$/ god)/' /etc/rc.conf
 
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
-wget https://aur.archlinux.org/packages/gi/gitosis-git/gitosis-git.tar.gz -O - | tar zxf - --strip-components=1
+curl https://aur.archlinux.org/packages/gi/gitosis-git/gitosis-git.tar.gz -o - | tar zxf - --strip-components=1
 makepkg -s -c -i
 exit
 sudo -i -u git gitosis-init < /tmp/setup/files/authorized_keys
