@@ -56,18 +56,26 @@ echo 'darwin' > /etc/hostname
 
 sed -i -e '/^# End of file$/i192.168.1.2\tdarwin.local\t\tdarwin\n' /etc/hosts
 
-sed -i -e '/^# interface=$/cinterface=eth0' /etc/rc.conf
-sed -i -e '/^# address=$/caddress=192.168.1.2' /etc/rc.conf
-sed -i -e '/^# netmask=$/cnetmask=255.255.255.0' /etc/rc.conf
-sed -i -e '/^# gateway=$/cgateway=192.168.1.1' /etc/rc.conf
-
 ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 pacman-key --init && pacman-key --populate archlinux
 
-pacman -S ntp openssh base-devel sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
+pacman -S netcfg ntp openssh base-devel sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
-sed -i -e '/^DAEMONS=/s/)$/ ntpd sshd)/' /etc/rc.conf
+cat << EOF > /etc/network.d/static
+CONNECTION='ethernet'
+DESCRIPTION='A basic static ethernet connection using iproute'
+INTERFACE='eth0'
+IP='static'
+ADDR='192.168.1.2'
+GATEWAY='192.168.1.1'
+DOMAIN='local'
+DNS=('8.8.8.8' '8.8.4.4')
+EOF
+
+sed -i -e '/^NETWORKS=/cNETWORKS=(static)' /etc/conf.d/netcfg
+
+sed -i -e '/^DAEMONS=/s/ network / net-profiles /;s/)$/ ntpd sshd)/' /etc/rc.conf
 
 echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
