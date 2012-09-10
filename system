@@ -1,3 +1,5 @@
+export LANG=en_US.UTF-8 && locale-gen
+
 echo 'Server = http://mirror.yandex.ru/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
 pacman -Syy --needed pacman
@@ -28,9 +30,9 @@ cp -a /etc/pacman.d/mirrorlist /mnt/etc/pacman.d
 
 chroot /mnt /bin/sh
 
-sed -i -r -e '/^#en_US.UTF-8/s/^#//' /etc/locale.gen && locale-gen
+sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
 
-echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+echo "LANG=$LANG" > /etc/locale.conf
 
 sed -i -e '/^HOOKS=/s/udev/udev usb/' /etc/mkinitcpio.conf
 
