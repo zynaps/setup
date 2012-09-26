@@ -22,7 +22,7 @@ mkdir -p /mnt/var/lib/pacman
 
 pacman -r /mnt -Sy base grub-bios
 pacman -r /mnt -Rn initscripts sysvinit
-pacman -r /mnt -Sy systemd-sysvcompat
+pacman -r /mnt -S systemd-sysvcompat
 
 mkdir -p /mnt/var/log/journal
 
