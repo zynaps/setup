@@ -62,7 +62,7 @@ ln -s /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone
 
 pacman-key --init && pacman-key --populate archlinux
 
-pacman -S netcfg ntp openssh base-devel sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
+pacman -S ntp openssh base-devel sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 cat << EOF > /etc/network.d/static
 CONNECTION='ethernet'
