@@ -20,8 +20,6 @@ for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount -R /$dir /mnt/$dir;
 
 mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base grub-bios
 
-mkdir -p /mnt/var/log/journal
-
 echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
 echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /mnt/etc/fstab
 echo -e "tmpfs\t\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /mnt/etc/fstab
