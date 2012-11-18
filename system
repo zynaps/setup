@@ -37,9 +37,9 @@ sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
 mkinitcpio -p linux
 
-echo 'darwin' > /etc/hostname
-
 ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
+
+echo 'darwin' > /etc/hostname
 
 cat << EOF > /etc/network.d/static
 CONNECTION='ethernet'
