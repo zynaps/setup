@@ -75,3 +75,5 @@ sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
 exit
+
+umount /mnt/{boot,}
