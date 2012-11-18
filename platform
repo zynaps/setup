@@ -1,4 +1,5 @@
 pacman -S postgresql
+sed -i -e '/^#PGROOT=/cPGROOT="/var/lib/postgres"' /etc/conf.d/postgresql
 mkdir -p /var/lib/postgres && chown -R postgres:postgres /var/lib/postgres
 PWFILE=`mktemp` && pwgen -A1Bn 16 > ${PWFILE} && chown postgres:postgres ${PWFILE}
 sudo -i -u postgres initdb -A md5 --pwfile=${PWFILE} /var/lib/postgres/data
@@ -10,8 +11,7 @@ sed -i -e '/^DAEMONS=/s/)$/ mongodb)/' /etc/rc.conf
 
 pacman -S redis
 echo "vm.overcommit_memory = 1" > /etc/sysctl.d/overcommit.conf
-sed -i -e '/^loglevel/s/verbose$/notice/' /etc/redis.conf
-sed -i -e '/^DAEMONS=/s/)$/ redis)/' /etc/rc.conf
+systemctl enable redis.service
 
 pacman -S erlang
 
