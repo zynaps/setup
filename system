@@ -39,8 +39,6 @@ mkinitcpio -p linux
 
 echo 'darwin' > /etc/hostname
 
-sed -i -e '/^# End of file$/i192.168.1.2\tdarwin.local\t\tdarwin\n' /etc/hosts
-
 ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
 
 cat << EOF > /etc/network.d/static
@@ -50,7 +48,6 @@ INTERFACE='eth0'
 IP='static'
 ADDR='192.168.1.2'
 GATEWAY='192.168.1.1'
-DOMAIN='local'
 DNS=('8.8.8.8' '8.8.4.4')
 EOF
 
