@@ -6,23 +6,9 @@ sudo -i -u postgres initdb -A md5 --pwfile=${PWFILE} /var/lib/postgres/data
 sed -i -e 's/^/*:*:*:postgres:/' ${PWFILE} && mv ${PWFILE} /root/.pgpass && chown root:root /root/.pgpass
 systemctl enable postgresql.service
 
-pacman -S mongodb
-sed -i -e '/^DAEMONS=/s/)$/ mongodb)/' /etc/rc.conf
-
 pacman -S redis
 echo "vm.overcommit_memory = 1" > /etc/sysctl.d/overcommit.conf
 systemctl enable redis.service
-
-pacman -S erlang
-
-sudo -i -u ${SUDO_USER}
-cd `mktemp -d`
-curl https://aur.archlinux.org/packages/ra/rabbitmq/rabbitmq.tar.gz -o - | tar zxf - --strip-components=1
-makepkg -s -c -i
-exit
-echo '[].' > /etc/rabbitmq/enabled_plugins && chown rabbitmq:rabbitmq /etc/rabbitmq/enabled_plugins
-rabbitmq-plugins enable rabbitmq_management
-sed -i -e '/^DAEMONS=/s/)$/ rabbitmq-server)/' /etc/rc.conf
 
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
