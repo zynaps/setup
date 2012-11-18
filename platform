@@ -10,12 +10,10 @@ pacman -S redis
 echo "vm.overcommit_memory = 1" > /etc/sysctl.d/overcommit.conf
 systemctl enable redis.service
 
-sudo -i -u ${SUDO_USER}
-cd `mktemp -d`
-cp -a /tmp/setup/builds/nginx/* .
-makepkg -s -c -i
-exit
-sed -i -e '/^DAEMONS=/s/)$/ nginx)/' /etc/rc.conf
+pacman -S nginx
+mkdir -p /etc/nginx/sites.d
+install -m 644 /tmp/setup/files/nginx.conf /etc/nginx
+systemctl enable nginx.service
 
 pacman -S ruby
 sed -i -e '/^gem:/s/--user-install/--no-user-install/' /etc/gemrc
