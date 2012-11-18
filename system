@@ -40,16 +40,6 @@ sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
 mkinitcpio -p linux
 
-grub-install /dev/sda
-
-<% if encrypt %>
-sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda2:root"/' /etc/default/grub
-<% end %>
-
-sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
-
-grub-mkconfig -o /boot/grub/grub.cfg
-
 echo 'darwin' > /etc/hostname
 
 sed -i -e '/^# End of file$/i192.168.1.2\tdarwin.local\t\tdarwin\n' /etc/hosts
@@ -83,5 +73,15 @@ useradd -G users,wheel -m -s /bin/zsh igor && passwd igor
 passwd -l root
 
 echo 'export EDITOR=vim' > /etc/profile.d/editor.sh && chmod +x /etc/profile.d/editor.sh
+
+grub-install /dev/sda
+
+<% if encrypt %>
+sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda2:root"/' /etc/default/grub
+<% end %>
+
+sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
+
+grub-mkconfig -o /boot/grub/grub.cfg
 
 exit
