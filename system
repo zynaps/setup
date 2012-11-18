@@ -1,9 +1,3 @@
-export LANG=en_US.UTF-8 && locale-gen
-
-echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
-
-pacman -Syy --needed pacman
-
 echo -e ",512,83,*\n,,83" | sfdisk -uM -D --quiet /dev/sda
 
 mkfs.ext4 -L boot /dev/sda1
@@ -19,6 +13,8 @@ udevadm settle
 mount /dev/disk/by-label/root /mnt && mkdir /mnt/boot && mount /dev/disk/by-label/boot /mnt/boot
 
 for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount -R /$dir /mnt/$dir; done
+
+echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
 mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base grub-bios
 
@@ -44,7 +40,7 @@ sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
 mkinitcpio -p linux
 
-grub-install --recheck /dev/sda
+grub-install /dev/sda
 
 <% if encrypt %>
 sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda2:root"/' /etc/default/grub
@@ -58,7 +54,7 @@ echo 'darwin' > /etc/hostname
 
 sed -i -e '/^# End of file$/i192.168.1.2\tdarwin.local\t\tdarwin\n' /etc/hosts
 
-ln -s /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone
+ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
 
 pacman-key --init && pacman-key --populate archlinux
 
