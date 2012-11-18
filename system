@@ -66,6 +66,8 @@ echo 'export EDITOR=vim' > /etc/profile.d/editor.sh && chmod +x /etc/profile.d/e
 
 grub-install /dev/sda
 
+ln -s -r /boot/grub/locale/en{\@quot,}.mo
+
 <% if encrypt %>
 sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda2:root"/' /etc/default/grub
 <% end %>
