@@ -12,11 +12,10 @@ udevadm settle
 
 mount /dev/disk/by-label/root /mnt && mkdir /mnt/boot && mount /dev/disk/by-label/boot /mnt/boot
 
-for dir in proc sys dev run tmp; do mkdir /mnt/$dir && mount -R /$dir /mnt/$dir; done
-
 echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
-mkdir -p /mnt/var/lib/pacman && pacman -r /mnt -Sy base grub-bios
+pacstrap /mnt base base-devel grub-bios ntp openssh \
+	sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
 echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /mnt/etc/fstab
@@ -24,9 +23,7 @@ echo -e "tmpfs\t\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /mnt/etc/fstab
 
 cp -a /etc/resolv.conf /mnt/etc
 
-cp -a /etc/pacman.d/mirrorlist /mnt/etc/pacman.d
-
-chroot /mnt /bin/sh
+arch-chroot /mnt
 
 sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
 
@@ -45,10 +42,6 @@ echo 'darwin' > /etc/hostname
 sed -i -e '/^# End of file$/i192.168.1.2\tdarwin.local\t\tdarwin\n' /etc/hosts
 
 ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
-
-pacman-key --init && pacman-key --populate archlinux
-
-pacman -S ntp openssh base-devel sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 cat << EOF > /etc/network.d/static
 CONNECTION='ethernet'
