@@ -25,10 +25,9 @@ gem install bundler
 
 gem install god
 mkdir -p /etc/god.d
-echo 'God.load "/etc/god.d/**/*.god"' > /etc/god.conf
-echo 'GOD_ARGS="-c /etc/god.conf"' > /etc/conf.d/god
-install /tmp/setup/files/god.rc /etc/rc.d/god
-sed -i -e '/^DAEMONS=/s/)$/ god)/' /etc/rc.conf
+echo 'God.load "/etc/god.d/*.god"' > /etc/god.conf
+install -m 644 /tmp/setup/files/god.service /etc/systemd/system/god.service
+systemctl enable god.service
 
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
