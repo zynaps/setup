@@ -6,6 +6,10 @@ APP_NAME=darwin
 
 useradd -u ${APP_UID} -m -s /bin/zsh ${APP_NAME} && echo "${APP_NAME}:${APP_PASSWD}" | chpasswd
 
+mkdir -m 700 /home/${APP_NAME}/.ssh
+install -m 600 /tmp/setup/files/authorized_keys /home/${APP_NAME}/.ssh
+chown -R ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.ssh
+
 <% if postgres %>
 echo "*:*:*:${APP_NAME}:${APP_PASSWD}" | (umask 0077 && cat > /home/${APP_NAME}/.pgpass)
 chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.pgpass
