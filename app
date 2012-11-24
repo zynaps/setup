@@ -10,6 +10,8 @@ mkdir -m 700 /home/${APP_NAME}/.ssh
 install -m 600 /tmp/setup/files/authorized_keys /home/${APP_NAME}/.ssh
 chown -R ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.ssh
 
+mkdir -p /srv/${APP_NAME} && chown -R ${APP_NAME}:${APP_NAME} /srv/${APP_NAME}
+
 <% if postgres %>
 echo "*:*:*:${APP_NAME}:${APP_PASSWD}" | (umask 0077 && cat > /home/${APP_NAME}/.pgpass)
 chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.pgpass
@@ -21,6 +23,6 @@ CREATE DATABASE ${APP_NAME}_test; GRANT ALL PRIVILEGES ON DATABASE ${APP_NAME}_t
 EOF
 <% end %>
 
-mkdir -p /srv/${APP_NAME} && chown -R ${APP_NAME}:${APP_NAME} /srv/${APP_NAME}
-
 echo 'God.load "/srv/'${APP_NAME}'/config/*.god"' > /etc/god.d/${APP_NAME}.god
+
+echo 'include /srv/'${APP_NAME}'/config/nginx.conf' > /etc/nginx/sites.d/${APP_NAME}.conf
