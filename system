@@ -19,7 +19,6 @@ pacstrap /mnt base base-devel grub-bios ntp openssh \
 
 echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
 echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /mnt/etc/fstab
-echo -e "tmpfs\t\t\t/tmp\ttmpfs\tnodev,nosuid\t0\t0" >> /mnt/etc/fstab
 
 cp -a /etc/resolv.conf /mnt/etc
 
