@@ -28,8 +28,6 @@ sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
 
 echo "LANG=$LANG" > /etc/locale.conf
 
-sed -i -e '/^HOOKS=/s/udev/udev usb/' /etc/mkinitcpio.conf
-
 <% if encrypt %>
 sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 <% end %>
