@@ -23,12 +23,6 @@ echo 'export RUBYOPT=-Ku' > /etc/profile.d/rubyopt.sh && chmod +x /etc/profile.d
 
 gem install bundler
 
-gem install god
-mkdir -p /etc/god.d
-echo 'God.load "/etc/god.d/*.god"' > /etc/god.conf
-install -m 644 /tmp/setup/files/god.service /etc/systemd/system/god.service
-systemctl enable god.service
-
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
 curl https://aur.archlinux.org/packages/gi/gitosis-git/gitosis-git.tar.gz -o - | tar zxf - --strip-components=1

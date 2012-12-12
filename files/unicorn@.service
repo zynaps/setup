@@ -1,0 +1,14 @@
+[Unit]
+Description=%i backend server
+After=network.target redis.service postgresql.service
+
+[Service]
+User=%i
+WorkingDirectory=/srv/%i/current
+PIDFile=/srv/%i/shared/pids/unicorn.pid
+ExecStart=/usr/bin/bundle exec unicorn -E production -c /srv/%i/current/config/unicorn.conf
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -QUIT $MAINPID
+
+[Install]
+WantedBy=multi-user.target

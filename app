@@ -1,8 +1,6 @@
-pacman -S zeromq libxslt imagemagick libpng
-
-APP_UID=2001
-APP_PASSWD=`pwgen -A1Bn 16`
-APP_NAME=darwin
+export APP_UID=2001
+export APP_PASSWD=`pwgen -A1Bn 16`
+export APP_NAME=darwin
 
 useradd -u ${APP_UID} -m -s /bin/zsh ${APP_NAME} && echo "${APP_NAME}:${APP_PASSWD}" | chpasswd
 
@@ -10,7 +8,12 @@ mkdir -m 700 /home/${APP_NAME}/.ssh
 install -m 600 /tmp/setup/files/authorized_keys /home/${APP_NAME}/.ssh
 chown -R ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.ssh
 
-mkdir -p /srv/${APP_NAME} && chown -R ${APP_NAME}:${APP_NAME} /srv/${APP_NAME}
+erb /tmp/setup/files/app/nginx.conf.erb > /etc/nginx/sites.d/${APP_NAME}.conf
+
+install -m 644 /tmp/setup/files/unicorn@.service /etc/systemd/system
+systemctl enable unicorn@${APP_NAME}.service
+
+erb /tmp/setup/files/app/logrotate.conf.erb > /etc/logrotate.d/${APP_NAME}
 
 <% if postgres %>
 echo "*:*:*:${APP_NAME}:${APP_PASSWD}" | (umask 0077 && cat > /home/${APP_NAME}/.pgpass)
@@ -23,6 +26,13 @@ CREATE DATABASE ${APP_NAME}_test; GRANT ALL PRIVILEGES ON DATABASE ${APP_NAME}_t
 EOF
 <% end %>
 
-echo 'God.load "/srv/'${APP_NAME}'/config/*.god"' > /etc/god.d/${APP_NAME}.god
+mkdir /home/${APP_NAME}/tmp
 
-echo 'include /srv/'${APP_NAME}'/config/nginx.conf' > /etc/nginx/sites.d/${APP_NAME}.conf
+erb /tmp/setup/files/app/unicorn.conf.erb > /home/${APP_NAME}/tmp/unicorn.conf
+erb /tmp/setup/files/app/deploy.rb.erb > /home/${APP_NAME}/tmp/deploy.rb
+
+mkdir -p /srv/${APP_NAME}/shared/config
+
+erb /tmp/setup/files/app/database.yml.erb > /srv/${APP_NAME}/shared/config/database.yml
+
+chown -R ${APP_NAME}:${APP_NAME} /{home,srv}/${APP_NAME}

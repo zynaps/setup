@@ -1,0 +1,13 @@
+/srv/<%= ENV['APP_NAME'] %>/shared/log/*.log {
+	missingok
+	notifempty
+	monthly
+	rotate 12
+	sharedscripts
+	compress
+	delaycompress
+	postrotate
+		kill -USR1 `cat /var/run/nginx.pid`
+		kill -USR1 `cat /srv/<%= ENV['APP_NAME'] %>/shared/pids/unicorn.pid`
+	endscript
+}

@@ -1,0 +1,30 @@
+require "bundler/capistrano"
+
+set :application, "<%= ENV['APP_NAME']%>"
+
+set :repository, "."
+set :scm, "none"
+set :deploy_via, :copy
+set :copy_exclude, ["/.git/", "/.gitignore", "/db/*.sqlite3", "/log/*.log", "/tmp"]
+set :deploy_to, "/srv/#{application}"
+set :user, "#{application}"
+set :use_sudo, false
+set :group_writable, false
+
+server "<%= `hostname`.chomp %>", :web, :app, :db, :primary => true
+
+namespace :deploy do
+  after "deploy:restart", "deploy:cleanup"
+
+  desc "Copy config files to deployed version."
+  task :copy_config, :roles => :app, :except => { :no_release => true } do
+    run "cp -a #{shared_path}/config/* #{release_path}/config"
+  end
+
+  after "deploy:update_code", "deploy:copy_config"
+
+  desc "Restart the application servers."
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "kill -HUP `cat #{current_path}/tmp/pids/unicorn.pid`"
+  end
+end
