@@ -48,9 +48,9 @@ GATEWAY='192.168.1.1'
 DNS=('8.8.8.8' '8.8.4.4')
 EOF
 
-sed -i -e '/^NETWORKS=/cNETWORKS=(static)' /etc/conf.d/netcfg
+systemctl enable netcfg@static.service
 
-systemctl enable {netcfg,cronie,ntpd,sshd}.service
+systemctl enable {cronie,ntpd,sshd}.service
 
 echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
