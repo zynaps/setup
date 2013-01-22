@@ -23,6 +23,8 @@ echo 'export RUBYOPT=-Ku' > /etc/profile.d/rubyopt.sh && chmod +x /etc/profile.d
 
 gem install bundler
 
+gem install nanoc kramdown fssm adsf systemu
+
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
 curl https://aur.archlinux.org/packages/gi/gitolite/gitolite.tar.gz -o - | tar zxf - --strip-components=1
