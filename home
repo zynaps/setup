@@ -29,6 +29,7 @@ cd ~/.vim/bundle
 git clone git://github.com/tpope/vim-surround.git
 git clone git://github.com/tpope/vim-repeat.git
 git clone git://github.com/kana/vim-smartinput.git
+git clone git://github.com/ervandew/supertab.git
 git clone git://github.com/tpope/vim-commentary.git
 git clone git://github.com/msanders/snipmate.vim.git
 git clone git://github.com/kien/ctrlp.vim.git
@@ -41,7 +42,6 @@ git clone git://github.com/tpope/vim-git.git
 git clone git://github.com/tpope/vim-bundler.git
 git clone git://github.com/tpope/vim-rake.git
 git clone git://github.com/tpope/vim-rails.git
-git clone git://github.com/tpope/vim-haml.git
 curl http://www.vim.org/scripts/download_script.php\?src_id=8379 -o ~/.vim/colors/railscasts.vim
 cp /tmp/setup/files/vimrc ~/.vimrc
 vim -c 'call pathogen#helptags()|quit'
