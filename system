@@ -14,7 +14,7 @@ mount /dev/disk/by-label/root /mnt && mkdir /mnt/boot && mount /dev/disk/by-labe
 
 echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
-pacstrap /mnt base base-devel python2 grub-bios ntp openssh \
+pacstrap /mnt base base-devel python2 grub-bios netctl ntp openssh \
 	sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
@@ -38,17 +38,17 @@ ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
 
 echo 'darwin' > /etc/hostname
 
-cat << EOF > /etc/network.d/static
-CONNECTION='ethernet'
-DESCRIPTION='A basic static ethernet connection using iproute'
-INTERFACE='eth0'
-IP='static'
-ADDR='192.168.1.2'
-GATEWAY='192.168.1.1'
+cat << EOF > /etc/netctl/static
+Description='A basic static ethernet connection'
+Interface=eth0
+Connection=ethernet
+IP=static
+Address=('192.168.1.2/24')
+Gateway='192.168.1.1'
 DNS=('8.8.8.8' '8.8.4.4')
 EOF
 
-systemctl enable netcfg@static.service
+netctl enable static
 
 systemctl enable {cronie,ntpd,sshd}.service
 
