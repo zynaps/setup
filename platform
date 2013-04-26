@@ -17,8 +17,6 @@ pacman -S ruby
 sed -i -e '/^gem:/s/--user-install/--no-user-install/' /etc/gemrc
 gem update --system && gem update
 
-echo 'export RUBYOPT=-Ku' > /etc/profile.d/rubyopt.sh && chmod +x /etc/profile.d/rubyopt.sh
-
 gem install bundler
 
 gem install nanoc kramdown fssm adsf systemu
