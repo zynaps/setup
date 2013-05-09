@@ -15,6 +15,13 @@ echo "alias l='ls -lA'" > ~/.oh-my-zsh/custom/aliases.zsh
 echo "bindkey '^U' backward-kill-line" > ~/.oh-my-zsh/custom/key-bindings.zsh
 echo "setopt noautomenu" > ~/.oh-my-zsh/custom/completion.zsh
 
+cat << EOF >> ~/.zshrc
+
+# Arch Linux way to manage gems
+export GEM_HOME=\$(ruby -rubygems -e "puts Gem.user_dir")
+export PATH=\$GEM_HOME/bin:\$PATH
+EOF
+
 cp /tmp/setup/files/tmux.conf ~/.tmux.conf
 
 git config --global user.name 'Igor Vinokurov'

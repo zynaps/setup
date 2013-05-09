@@ -13,14 +13,6 @@ mkdir -p /etc/nginx/sites.d
 install -m 644 /tmp/setup/files/nginx.conf /etc/nginx
 systemctl enable nginx.service
 
-pacman -S ruby
-sed -i -e '/^gem:/s/--user-install/--no-user-install/' /etc/gemrc
-gem update --system && gem update
-
-gem install bundler
-
-gem install nanoc kramdown fssm adsf systemu
-
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
 curl https://aur.archlinux.org/packages/gi/gitolite/gitolite.tar.gz -o - | tar zxf - --strip-components=1
