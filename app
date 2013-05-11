@@ -33,6 +33,6 @@ erb /tmp/setup/files/app/deploy.rb.erb > /home/${APP_NAME}/tmp/deploy.rb
 
 mkdir -p /srv/${APP_NAME}/shared/config
 
-erb /tmp/setup/files/app/database.yml.erb > /srv/${APP_NAME}/shared/config/database.yml
+erb /tmp/setup/files/app/database.yml.erb | (umask 0077 && cat > /srv/${APP_NAME}/shared/config/database.yml)
 
 chown -R ${APP_NAME}:${APP_NAME} /{home,srv}/${APP_NAME}
