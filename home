@@ -44,6 +44,7 @@ git clone git://github.com/scrooloose/snipmate-snippets.git ~/.vim/snippets
 rm -rf snipmate.vim/snippets
 git clone git://github.com/now/vim-restore-position.git
 git clone git://github.com/bronson/vim-trailing-whitespace.git
+git clone https://github.com/pangloss/vim-javascript.git
 git clone git://github.com/vim-ruby/vim-ruby.git
 git clone git://github.com/tpope/vim-git.git
 git clone git://github.com/tpope/vim-bundler.git
