@@ -2,11 +2,7 @@ echo -e "2,512\n514" | sfdisk -uM --quiet /dev/sda
 
 mkfs.ext4 -L boot /dev/sda1
 
-<% if encrypt %>
 cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 root && mkfs.ext4 -L root /dev/mapper/root
-<% else %>
-mkfs.ext4 -L root /dev/sda2
-<% end %>
 
 udevadm settle
 
@@ -28,9 +24,7 @@ sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
 
 echo "LANG=$LANG" > /etc/locale.conf
 
-<% if encrypt %>
 sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
-<% end %>
 
 mkinitcpio -p linux
 
@@ -65,10 +59,7 @@ grub-install /dev/sda
 
 ln -s -r /boot/grub/locale/en{\@quot,}.mo
 
-<% if encrypt %>
 sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda2:root"/' /etc/default/grub
-<% end %>
-
 sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
