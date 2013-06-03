@@ -15,7 +15,6 @@ systemctl enable unicorn@${APP_NAME}.service
 
 erb /tmp/setup/files/app/logrotate.conf.erb > /etc/logrotate.d/${APP_NAME}
 
-<% if postgres %>
 echo "*:*:*:${APP_NAME}:${APP_PASSWD}" | (umask 0077 && cat > /home/${APP_NAME}/.pgpass)
 chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.pgpass
 cat << EOF | psql -U postgres
@@ -24,7 +23,6 @@ CREATE DATABASE ${APP_NAME}_production; GRANT ALL PRIVILEGES ON DATABASE ${APP_N
 CREATE DATABASE ${APP_NAME}_development; GRANT ALL PRIVILEGES ON DATABASE ${APP_NAME}_development TO ${APP_NAME};
 CREATE DATABASE ${APP_NAME}_test; GRANT ALL PRIVILEGES ON DATABASE ${APP_NAME}_test TO ${APP_NAME};
 EOF
-<% end %>
 
 mkdir /home/${APP_NAME}/tmp
 
