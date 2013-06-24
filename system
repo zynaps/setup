@@ -10,7 +10,7 @@ mount /dev/disk/by-label/root /mnt && mkdir /mnt/boot && mount /dev/disk/by-labe
 
 echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
-pacstrap /mnt base base-devel python2 ruby grub-bios ntp openssh \
+pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
 	sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
