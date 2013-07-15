@@ -13,8 +13,7 @@ echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman
 pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
 	sudo rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
-echo -e "/dev/disk/by-label/root\t/\text4\tdefaults\t1\t1" > /mnt/etc/fstab
-echo -e "/dev/disk/by-label/boot\t/boot\text4\tdefaults\t1\t2" >> /mnt/etc/fstab
+genfstab -p -L /mnt > /mnt/etc/fstab
 
 cp -a /etc/resolv.conf /mnt/etc
 
