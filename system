@@ -6,7 +6,7 @@ cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 root && mkfs.ex
 
 udevadm settle
 
-mount /dev/disk/by-label/root /mnt && mkdir /mnt/boot && mount /dev/disk/by-label/boot /mnt/boot
+mount LABEL=root /mnt && mkdir /mnt/boot && mount LABEL=boot /mnt/boot
 
 echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
