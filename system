@@ -1,10 +1,8 @@
-echo -e "2,512\n514" | sfdisk -uM --quiet /dev/sda
+sgdisk -Z -a 2048 -o -g -n 1:2048:+1M -t 1:ef02 -n 2::+512M -N 3 -p /dev/sda
 
-mkfs.ext4 -L boot /dev/sda1
+mkfs.ext4 -L boot /dev/sda2
 
-cryptsetup luksFormat /dev/sda2 && cryptsetup luksOpen /dev/sda2 root && mkfs.ext4 -L root /dev/mapper/root
-
-udevadm settle
+cryptsetup luksFormat /dev/sda3 && cryptsetup luksOpen /dev/sda3 root && mkfs.ext4 -L root /dev/mapper/root
 
 mount LABEL=root /mnt && mkdir /mnt/boot && mount LABEL=boot /mnt/boot
 
@@ -58,7 +56,7 @@ grub-install /dev/sda
 
 ln -s -r /boot/grub/locale/en{\@quot,}.mo
 
-sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda2:root"/' /etc/default/grub
+sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda3:root"/' /etc/default/grub
 sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
