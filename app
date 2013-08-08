@@ -2,7 +2,7 @@ export APP_UID=2001
 export APP_PASSWD=`pwgen -A1Bn 16`
 export APP_NAME=darwin
 
-useradd -u ${APP_UID} -m -s /bin/zsh ${APP_NAME} && echo "${APP_NAME}:${APP_PASSWD}" | chpasswd
+useradd -u ${APP_UID} -m -s /usr/bin/zsh ${APP_NAME} && echo "${APP_NAME}:${APP_PASSWD}" | chpasswd
 
 mkdir -m 700 /home/${APP_NAME}/.ssh
 install -m 600 /tmp/setup/files/authorized_keys /home/${APP_NAME}/.ssh
