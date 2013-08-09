@@ -1,5 +1,6 @@
 pacman -S postgresql
 PWFILE=`mktemp` && pwgen -A1Bn 16 > ${PWFILE} && chown postgres:postgres ${PWFILE}
+chown -R postgres:postgres /var/lib/postgres
 sudo -i -u postgres initdb -A md5 --pwfile=${PWFILE} /var/lib/postgres/data
 sed -i -e 's/^/*:*:*:postgres:/' ${PWFILE} && mv ${PWFILE} /root/.pgpass && chown root:root /root/.pgpass
 systemctl enable postgresql.service
