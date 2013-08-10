@@ -14,6 +14,8 @@ mkdir -p /etc/nginx/sites.d
 install -m 644 /tmp/setup/files/nginx.conf /etc/nginx
 systemctl enable nginx.service
 
+install -m 644 /tmp/setup/files/unicorn@.service /etc/systemd/system
+
 sudo -i -u ${SUDO_USER}
 cd `mktemp -d`
 curl https://aur.archlinux.org/packages/gi/gitolite/gitolite.tar.gz -o - | tar zxf - --strip-components=1

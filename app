@@ -8,13 +8,6 @@ mkdir -m 700 /home/${APP_NAME}/.ssh
 install -m 600 /tmp/setup/files/authorized_keys /home/${APP_NAME}/.ssh
 chown -R ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.ssh
 
-erb /tmp/setup/files/app/nginx.conf.erb > /etc/nginx/sites.d/${APP_NAME}.conf
-
-install -m 644 /tmp/setup/files/unicorn@.service /etc/systemd/system
-systemctl enable unicorn@${APP_NAME}.service
-
-erb /tmp/setup/files/app/logrotate.conf.erb > /etc/logrotate.d/${APP_NAME}
-
 echo "*:*:*:${APP_NAME}:${APP_PASSWD}" | (umask 0077 && cat > /home/${APP_NAME}/.pgpass)
 chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.pgpass
 cat << EOF | psql -U postgres
@@ -34,3 +27,9 @@ mkdir -p /srv/${APP_NAME}/shared/config
 erb /tmp/setup/files/app/database.yml.erb | (umask 0077 && cat > /srv/${APP_NAME}/shared/config/database.yml)
 
 chown -R ${APP_NAME}:${APP_NAME} /{home,srv}/${APP_NAME}
+
+systemctl enable unicorn@${APP_NAME}.service
+
+erb /tmp/setup/files/app/nginx.conf.erb > /etc/nginx/sites.d/${APP_NAME}.conf
+
+erb /tmp/setup/files/app/logrotate.conf.erb > /etc/logrotate.d/${APP_NAME}
