@@ -14,6 +14,8 @@ mkdir -p /etc/nginx/sites.d
 install -m 644 /tmp/setup/files/nginx.conf /etc/nginx
 systemctl enable nginx.service
 
+GEM_HOME=`ruby -rubygems -e "puts Gem.default_dir"` gem install bundler --no-user-install
+
 install -m 644 /tmp/setup/files/unicorn@.service /etc/systemd/system
 
 sudo -i -u ${SUDO_USER}
