@@ -17,6 +17,10 @@ cp -a /etc/resolv.conf /mnt/etc
 
 arch-chroot /mnt
 
+echo 'darwin' > /etc/hostname
+
+ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
+
 sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
 
 echo "LANG=$LANG" > /etc/locale.conf
@@ -25,9 +29,12 @@ sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
 mkinitcpio -p linux
 
-ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
+echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
+echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
 
-echo 'darwin' > /etc/hostname
+useradd -G users,wheel -m -s /usr/bin/zsh igor && passwd igor
+
+passwd -l root
 
 cat << EOF > /etc/netctl/static
 Description='A basic static ethernet connection'
@@ -42,17 +49,6 @@ EOF
 
 netctl enable static
 
-systemctl enable {cronie,ntpd,sshd}.service
-
-echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
-echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
-
-useradd -G users,wheel -m -s /usr/bin/zsh igor && passwd igor
-
-passwd -l root
-
-echo 'export EDITOR=vim' > /etc/profile.d/editor.sh && chmod +x /etc/profile.d/editor.sh
-
 grub-install /dev/sda
 
 ln -s -r /boot/grub/locale/en{\@quot,}.mo
@@ -61,6 +57,8 @@ sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda3:root"/' /etc/defa
 sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
+
+systemctl enable {cronie,ntpd,sshd}.service
 
 exit
 
