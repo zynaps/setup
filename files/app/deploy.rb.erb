@@ -11,7 +11,7 @@ set :user, "#{application}"
 set :use_sudo, false
 set :group_writable, false
 
-server "<%= `hostname`.chomp %>", :web, :app, :db, :primary => true
+server "<%= `hostname -f`.chomp %>", :web, :app, :db, :primary => true
 
 namespace :deploy do
   after "deploy:restart", "deploy:cleanup"

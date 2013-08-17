@@ -3,7 +3,7 @@ upstream <%= ENV['APP_NAME'] %>_backend {
 }
 
 server {
-    server_name <%= ENV['APP_NAME'] %>;
+    server_name <%= [ENV['APP_NAME'], `hostname -d`.chomp].join('.') %>;
 
     root /srv/<%= ENV['APP_NAME'] %>/current/public;
 
