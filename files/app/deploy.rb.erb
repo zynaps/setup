@@ -6,6 +6,7 @@ set :repository, "."
 set :scm, "none"
 set :deploy_via, :copy
 set :copy_exclude, ["/.git/", "/.gitignore", "/db/*.sqlite3", "/log/*.log", "/tmp"]
+set :copy_remote_dir, "/srv/#{application}/tmp"
 set :deploy_to, "/srv/#{application}"
 set :user, "#{application}"
 set :use_sudo, false

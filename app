@@ -22,7 +22,7 @@ mkdir /home/${APP_NAME}/tmp
 erb /tmp/setup/files/app/unicorn.conf.erb > /home/${APP_NAME}/tmp/unicorn.conf
 erb /tmp/setup/files/app/deploy.rb.erb > /home/${APP_NAME}/tmp/deploy.rb
 
-mkdir -p /srv/${APP_NAME}/shared/config
+mkdir -p /srv/${APP_NAME}/{tmp,shared/config}
 
 erb /tmp/setup/files/app/database.yml.erb | (umask 0077 && cat > /srv/${APP_NAME}/shared/config/database.yml)
 
