@@ -29,6 +29,7 @@ erb /tmp/setup/files/app/database.yml.erb | (umask 0077 && cat > /srv/${APP_NAME
 chown -R ${APP_NAME}:${APP_NAME} /{home,srv}/${APP_NAME}
 
 systemctl enable unicorn@${APP_NAME}.service
+echo "${APP_NAME} ALL= NOPASSWD: /usr/bin/systemctl reload unicorn@${APP_NAME}.service" | (umask 0227 && cat >> /etc/sudoers.d/55${APP_NAME})
 
 erb /tmp/setup/files/app/nginx.conf.erb > /etc/nginx/sites.d/${APP_NAME}.conf
 

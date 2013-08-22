@@ -25,6 +25,6 @@ namespace :deploy do
 
   desc "Restart the application servers."
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "kill -HUP `cat #{current_path}/tmp/pids/unicorn.pid`"
+    sudo "systemctl reload unicorn@#{application}.service"
   end
 end
