@@ -30,8 +30,9 @@ namespace :deploy do
 
   after "deploy:update_code", "deploy:copy_config"
 
-  desc "Restart the application servers."
+  desc "Restart the application processes."
   task :restart, :roles => :app, :except => { :no_release => true } do
     sudo "systemctl reload unicorn@#{application}.service"
+    sudo "systemctl restart resque_workers@#{application}.service"
   end
 end
