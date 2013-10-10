@@ -12,8 +12,12 @@ set :user, "#{application}"
 set :use_sudo, false
 set :group_writable, false
 
-task :staging do
+task :local do
   server "localhost", :web, :app, :db, :primary => true
+end
+
+task :staging do
+  server "<%= `hostname -f`.chomp %>", :web, :app, :db, :primary => true
 end
 
 task :production do
