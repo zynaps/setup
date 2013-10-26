@@ -31,6 +31,9 @@ chown -R ${APP_NAME}:${APP_NAME} /{home,srv}/${APP_NAME}
 systemctl enable unicorn@${APP_NAME}.service
 echo "${APP_NAME} ALL= NOPASSWD: /usr/bin/systemctl reload unicorn@${APP_NAME}.service" | (umask 0227 && cat >> /etc/sudoers.d/55${APP_NAME})
 
+systemctl enable resque_scheduler@${APP_NAME}.service
+echo "${APP_NAME} ALL= NOPASSWD: /usr/bin/systemctl restart resque_scheduler@${APP_NAME}.service" | (umask 0227 && cat >> /etc/sudoers.d/55${APP_NAME})
+
 systemctl enable resque_workers@${APP_NAME}.service
 echo "${APP_NAME} ALL= NOPASSWD: /usr/bin/systemctl restart resque_workers@${APP_NAME}.service" | (umask 0227 && cat >> /etc/sudoers.d/55${APP_NAME})
 

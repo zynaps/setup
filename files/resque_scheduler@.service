@@ -1,0 +1,15 @@
+[Unit]
+Description=%i resque scheduler
+After=network.target redis.service postgresql.service
+
+[Service]
+User=%i
+WorkingDirectory=/srv/%i/current
+PIDFile=/srv/%i/shared/pids/resque_scheduler.pid
+Environment=RAILS_ENV=production
+Environment=PIDFILE=/srv/%i/shared/pids/resque_scheduler.pid
+ExecStart=/usr/bin/bundle exec rake environment resque:scheduler
+ExecStop=/bin/kill -QUIT $MAINPID
+
+[Install]
+WantedBy=multi-user.target

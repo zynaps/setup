@@ -18,6 +18,8 @@ GEM_HOME=`ruby -rubygems -e "puts Gem.default_dir"` gem install bundler --no-use
 
 install -m 644 /tmp/setup/files/unicorn@.service /etc/systemd/system
 
+install -m 644 /tmp/setup/files/resque_scheduler@.service /etc/systemd/system
+
 install -m 644 /tmp/setup/files/resque_workers@.service /etc/systemd/system
 
 sudo -i -u ${SUDO_USER}

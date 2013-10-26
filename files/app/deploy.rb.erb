@@ -37,6 +37,7 @@ namespace :deploy do
   desc "Restart the application processes."
   task :restart, :roles => :app, :except => { :no_release => true } do
     sudo "systemctl reload unicorn@#{application}.service"
+    sudo "systemctl restart resque_scheduler@#{application}.service"
     sudo "systemctl restart resque_workers@#{application}.service"
   end
 end
