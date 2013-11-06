@@ -41,10 +41,11 @@ git clone git://github.com/tpope/vim-repeat.git
 git clone git://github.com/kana/vim-smartinput.git
 git clone git://github.com/ervandew/supertab.git
 git clone git://github.com/tpope/vim-commentary.git
-git clone git://github.com/msanders/snipmate.vim.git
 git clone git://github.com/kien/ctrlp.vim.git
-git clone git://github.com/scrooloose/snipmate-snippets.git ~/.vim/snippets
-rm -rf snipmate.vim/snippets
+git clone https://github.com/tomtom/tlib_vim.git
+git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
+git clone https://github.com/garbas/vim-snipmate.git
+git clone https://github.com/honza/vim-snippets.git
 git clone git://github.com/now/vim-restore-position.git
 git clone git://github.com/bronson/vim-trailing-whitespace.git
 git clone https://github.com/pangloss/vim-javascript.git
