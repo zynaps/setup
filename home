@@ -7,7 +7,7 @@ Host *
   ControlPersist yes
 EOF
 
-git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 sed -i -r -e '/^#plugins=/s/^#//' -e '/^plugins=/s/\)$/ bundler\)/' ~/.zshrc
 sed -i -e '/^ZSH_THEME=/s/robbyrussell/gentoo/' ~/.zshrc
@@ -36,24 +36,24 @@ git config --global push.default simple
 mkdir -p ~/.vim/{autoload,bundle,colors}
 curl https://raw.github.com/tpope/vim-pathogen/HEAD/autoload/pathogen.vim -o ~/.vim/autoload/pathogen.vim
 cd ~/.vim/bundle
-git clone git://github.com/tpope/vim-surround.git
-git clone git://github.com/tpope/vim-repeat.git
-git clone git://github.com/kana/vim-smartinput.git
-git clone git://github.com/ervandew/supertab.git
-git clone git://github.com/tpope/vim-commentary.git
-git clone git://github.com/kien/ctrlp.vim.git
+git clone https://github.com/tpope/vim-surround.git
+git clone https://github.com/tpope/vim-repeat.git
+git clone https://github.com/kana/vim-smartinput.git
+git clone https://github.com/ervandew/supertab.git
+git clone https://github.com/tpope/vim-commentary.git
+git clone https://github.com/kien/ctrlp.vim.git
 git clone https://github.com/tomtom/tlib_vim.git
 git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
 git clone https://github.com/garbas/vim-snipmate.git
 git clone https://github.com/honza/vim-snippets.git
-git clone git://github.com/now/vim-restore-position.git
-git clone git://github.com/bronson/vim-trailing-whitespace.git
+git clone https://github.com/now/vim-restore-position.git
+git clone https://github.com/bronson/vim-trailing-whitespace.git
 git clone https://github.com/pangloss/vim-javascript.git
-git clone git://github.com/vim-ruby/vim-ruby.git
-git clone git://github.com/tpope/vim-git.git
-git clone git://github.com/tpope/vim-bundler.git
-git clone git://github.com/tpope/vim-rake.git
-git clone git://github.com/tpope/vim-rails.git
+git clone https://github.com/vim-ruby/vim-ruby.git
+git clone https://github.com/tpope/vim-git.git
+git clone https://github.com/tpope/vim-bundler.git
+git clone https://github.com/tpope/vim-rake.git
+git clone https://github.com/tpope/vim-rails.git
 curl http://www.vim.org/scripts/download_script.php\?src_id=8379 -o ~/.vim/colors/railscasts.vim
 cp /tmp/setup/files/vimrc ~/.vimrc
 vim -c 'call pathogen#helptags()|quit'
