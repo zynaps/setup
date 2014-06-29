@@ -49,7 +49,9 @@ Address=${IF_ADDRESS}
 Gateway=${IF_ROUTE}
 EOF
 
-systemctl enable systemd-networkd.service systemd-timesyncd.service
+systemctl enable systemd-networkd.service systemd-timesyncd.service systemd-resolved.service
+
+umount /etc/resolv.conf && ln -s -r -f /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 grub-install /dev/sda
 
