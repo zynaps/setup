@@ -40,18 +40,16 @@ export IF_NAME=`ip route show | awk '/^default/ { print $5 }'`
 export IF_ADDRESS=`ip addr show ${IF_NAME} | awk '/inet[^6]/ { print $2 }'`
 export IF_ROUTE=`ip route show | awk '/^default/ { print $3 }'`
 
-cat << EOF > /etc/netctl/static
-Description='A basic static ethernet connection'
-Interface='${IF_NAME}'
-Connection=ethernet
-IP=static
-Address=('${IF_ADDRESS}')
-Gateway='${IF_ROUTE}'
-DNS=('8.8.8.8' '8.8.4.4')
-DNSSearch='zynaps.ru'
+cat << EOF > /etc/systemd/network/static.network
+[Match]
+Name=${IF_NAME}
+
+[Network]
+Address=${IF_ADDRESS}
+Gateway=${IF_ROUTE}
 EOF
 
-netctl enable static
+systemctl enable systemd-networkd.service
 
 grub-install /dev/sda
 
