@@ -8,7 +8,7 @@ mount LABEL=root /mnt && mkdir /mnt/boot && mount LABEL=boot /mnt/boot
 
 echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
-pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
+pacstrap /mnt base base-devel python2 ruby grub openssh \
 	rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 genfstab -p -L /mnt > /mnt/etc/fstab
@@ -60,7 +60,9 @@ sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
 
-systemctl enable {ntpd,sshd}.service
+systemctl enable systemd-timesyncd.service
+
+systemctl enable sshd.service
 
 exit
 
