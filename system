@@ -36,13 +36,17 @@ useradd -G users,wheel -m -s /usr/bin/zsh igor && passwd igor
 
 passwd -l root
 
+export IF_NAME=`ip route show | awk '/^default/ { print $5 }'`
+export IF_ADDRESS=`ip addr show ${IF_NAME} | awk '/inet[^6]/ { print $2 }'`
+export IF_ROUTE=`ip route show | awk '/^default/ { print $3 }'`
+
 cat << EOF > /etc/netctl/static
 Description='A basic static ethernet connection'
-Interface=eth0
+Interface='${IF_NAME}'
 Connection=ethernet
 IP=static
-Address=('192.168.1.2/24')
-Gateway='192.168.1.1'
+Address=('${IF_ADDRESS}')
+Gateway='${IF_ROUTE}'
 DNS=('8.8.8.8' '8.8.4.4')
 DNSSearch='zynaps.ru'
 EOF
