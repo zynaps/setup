@@ -13,8 +13,6 @@ pacstrap /mnt base base-devel python2 ruby grub openssh \
 
 genfstab -p -L /mnt > /mnt/etc/fstab
 
-cp -a /etc/resolv.conf /mnt/etc
-
 arch-chroot /mnt
 
 echo 'darwin' > /etc/hostname
