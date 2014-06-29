@@ -58,7 +58,7 @@ sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
 
-systemctl enable {cronie,ntpd,sshd}.service
+systemctl enable {ntpd,sshd}.service
 
 exit
 
