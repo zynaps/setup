@@ -64,4 +64,4 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 exit
 
-umount /mnt/{boot,}
+umount -R /mnt
