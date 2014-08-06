@@ -49,9 +49,9 @@ Address=${IF_ADDRESS}
 Gateway=${IF_ROUTE}
 EOF
 
-systemctl enable systemd-networkd.service systemd-timesyncd.service systemd-resolved.service
+systemctl enable systemd-networkd.service systemd-timesyncd.service
 
-umount /etc/resolv.conf && ln -s -r -f /run/systemd/resolve/resolv.conf /etc/resolv.conf
+umount /etc/resolv.conf && echo -e "search zynaps.ru\nnameserver 8.8.8.8\nnameserver 8.8.4.4" > /etc/resolv.conf
 
 grub-install /dev/sda
 
