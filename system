@@ -8,7 +8,7 @@ mount LABEL=root /mnt && mkdir /mnt/boot && mount LABEL=boot /mnt/boot
 
 echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 
-pacstrap /mnt base base-devel python2 ruby grub openssh \
+pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
 	rsync tmux vim zsh git nmap socat traceroute dnsutils whois pwgen
 
 genfstab -p -L /mnt > /mnt/etc/fstab
@@ -34,7 +34,7 @@ useradd -G users,wheel -m -s /usr/bin/zsh igor && passwd igor
 
 passwd -l root
 
-systemctl enable sshd.service
+systemctl enable {ntpd,sshd}.service
 
 export IF_NAME=`ip route show | awk '/^default/ { print $5 }'`
 export IF_ADDRESS=`ip addr show ${IF_NAME} | awk '/inet[^6]/ { print $2 }'`
@@ -49,7 +49,7 @@ Address=${IF_ADDRESS}
 Gateway=${IF_ROUTE}
 EOF
 
-systemctl enable systemd-networkd.service systemd-timesyncd.service
+systemctl enable systemd-networkd.service
 
 umount /etc/resolv.conf && echo -e "search zynaps.ru\nnameserver 8.8.8.8\nnameserver 8.8.4.4" > /etc/resolv.conf
 
