@@ -34,6 +34,8 @@ useradd -G users,wheel -m -s /usr/bin/zsh igor && passwd igor
 
 passwd -l root
 
+echo -e "\n# A clock offset of any value will be accepted\ntinker panic 0" >> /etc/ntp.conf
+
 systemctl enable {ntpd,sshd}.service
 
 export IF_NAME=`ip route show | awk '/^default/ { print $5 }'`
