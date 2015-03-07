@@ -1,0 +1,2 @@
+cp /etc/iptables/{empty,iptables}.rules
+systemctl enable iptables.service
