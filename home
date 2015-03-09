@@ -1,5 +1,3 @@
-mkdir -m 700 -p ~/.ssh && install -m 600 /tmp/setup/files/authorized_keys ~/.ssh
-
 cat << EOF > ~/.ssh/config
 Host *
   ControlMaster auto

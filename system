@@ -31,6 +31,10 @@ echo 'Defaults !env_reset' | (umask 0227 && cat > /etc/sudoers.d/98env_keep)
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
 
 useradd -G users,wheel -m -s /usr/bin/zsh igor && passwd igor
+mkdir -m 700 -p ~igor/.ssh && install -m 600 /tmp/setup/files/authorized_keys ~igor/.ssh
+chown -R igor:igor ~igor/.ssh
+
+sed -i -r -e '/^#PasswordAuthentication/s/^#//' -e '/^PasswordAuthentication/s/yes/no/' /etc/ssh/sshd_config
 
 passwd -l root
 
