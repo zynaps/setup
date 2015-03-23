@@ -52,6 +52,6 @@ git clone https://github.com/tpope/vim-git.git
 git clone https://github.com/tpope/vim-bundler.git
 git clone https://github.com/tpope/vim-rake.git
 git clone https://github.com/tpope/vim-rails.git
-curl http://www.vim.org/scripts/download_script.php\?src_id=8379 -o ~/.vim/colors/railscasts.vim
+curl -L https://raw.github.com/chriskempson/base16-vim/raw/master/colors/base16-tomorrow.vim -o ~/.vim/colors/base16-tomorrow.vim
 cp /tmp/setup/files/vimrc ~/.vimrc
 vim -c 'call pathogen#helptags()|quit'
