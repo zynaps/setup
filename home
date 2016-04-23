@@ -13,7 +13,7 @@ echo "alias l='ls -lA'" > ~/.oh-my-zsh/custom/aliases.zsh
 echo "bindkey '^U' backward-kill-line" > ~/.oh-my-zsh/custom/key-bindings.zsh
 echo "setopt noautomenu" > ~/.oh-my-zsh/custom/completion.zsh
 
-echo 'export EDITOR=vim' >> ~/.zshrc
+echo -e "\n# One editor for all cases\nexport EDITOR=vim" >> ~/.zshrc
 
 cat << EOF >> ~/.zshrc
 
