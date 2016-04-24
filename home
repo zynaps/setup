@@ -27,7 +27,7 @@ cp /tmp/setup/files/tmux.conf ~/.tmux.conf
 git config --global user.name 'Igor Vinokurov'
 git config --global user.email zynaps@zynaps.ru
 git config --global color.ui auto
-curl -L https://raw.github.com/github/gitignore/master/Global/vim.gitignore -o ~/.gitignore
+curl -L https://www.gitignore.io/api/vim -o ~/.gitignore
 git config --global core.excludesfile ~/.gitignore
 git config --global push.default simple
 
