@@ -32,7 +32,7 @@ git config --global core.excludesfile ~/.gitignore
 git config --global push.default simple
 
 mkdir -p ~/.vim/{autoload,bundle,colors}
-curl -L https://raw.github.com/tpope/vim-pathogen/HEAD/autoload/pathogen.vim -o ~/.vim/autoload/pathogen.vim
+curl -L https://tpo.pe/pathogen.vim -o ~/.vim/autoload/pathogen.vim
 cd ~/.vim/bundle
 git clone https://github.com/tpope/vim-surround.git
 git clone https://github.com/tpope/vim-repeat.git
