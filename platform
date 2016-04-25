@@ -22,12 +22,7 @@ install -m 644 /tmp/setup/files/resque_scheduler@.service /etc/systemd/system
 
 install -m 644 /tmp/setup/files/resque_workers@.service /etc/systemd/system
 
-sudo -i -u ${SUDO_USER}
-cd `mktemp -d`
-curl https://aur.archlinux.org/packages/gi/gitolite/gitolite.tar.gz -o - | tar zxf - --strip-components=1
-makepkg -s -c -i
-exit
-mkdir -p /srv/git && chown -R git:git /srv/git && usermod -d /srv/git git
-cp /tmp/setup/files/authorized_keys /srv/git/zynaps.pub
-sudo -i -u git gitolite setup -pk zynaps.pub
-rm /srv/git/zynaps.pub
+pacman -S gitolite
+cp /tmp/setup/files/authorized_keys /var/lib/gitolite/zynaps.pub
+sudo -i -u gitolite gitolite setup -pk zynaps.pub
+rm /var/lib/gitolite/zynaps.pub
