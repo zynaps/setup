@@ -9,7 +9,8 @@ git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 sed -i -r -e '/^#plugins=/s/^#//' -e '/^plugins=/s/\)$/ bundler\)/' ~/.zshrc
 sed -i -e '/^ZSH_THEME=/s/robbyrussell/gentoo/' ~/.zshrc
-echo "alias l='ls -lA'" > ~/.oh-my-zsh/custom/aliases.zsh
+echo "alias sudo='sudo -E'" > ~/.oh-my-zsh/custom/aliases.zsh
+echo "alias l='ls -lA'" >> ~/.oh-my-zsh/custom/aliases.zsh
 echo "bindkey '^U' backward-kill-line" > ~/.oh-my-zsh/custom/key-bindings.zsh
 echo "setopt noautomenu" > ~/.oh-my-zsh/custom/completion.zsh
 
