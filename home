@@ -1,10 +1,3 @@
-cat << EOF > ~/.ssh/config
-Host *
-  ControlMaster auto
-  ControlPath ~/.ssh/master-%L-%r@%h:%p
-  ControlPersist yes
-EOF
-
 git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 sed -i -r -e '/^#plugins=/s/^#//' -e '/^plugins=/s/\)$/ bundler\)/' ~/.zshrc
