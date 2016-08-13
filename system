@@ -16,6 +16,8 @@ genfstab -p -L /mnt > /mnt/etc/fstab
 
 arch-chroot /mnt
 
+git clone https://github.com/zynaps/setup.git /tmp/setup
+
 echo 'darwin' > /etc/hostname
 
 ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
