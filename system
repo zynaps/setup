@@ -1,3 +1,5 @@
+ntpdate pool.ntp.org
+
 sgdisk -Z -a 2048 -o -g -n 1:2048:+1M -t 1:ef02 -n 2::+512M -N 3 -p /dev/sda
 
 mkfs.ext4 -L boot /dev/sda2
