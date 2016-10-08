@@ -8,8 +8,6 @@ cryptsetup luksFormat /dev/sda3 && cryptsetup luksOpen /dev/sda3 root && mkfs.ex
 
 mount LABEL=root /mnt && mkdir /mnt/boot && mount LABEL=boot /mnt/boot
 
-echo 'Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
-
 pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
 	rsync tmux vim zsh git tcpdump nmap socat traceroute bind-tools whois pwgen \
 	open-vm-tools
