@@ -2,17 +2,17 @@ ntpdate pool.ntp.org
 
 sgdisk -Z -a 2048 -o -g -n 1:2048:+1M -t 1:ef02 -n 2::+512M -N 3 -p /dev/sda
 
-mkfs.ext4 -L boot /dev/sda2
+cryptsetup luksFormat /dev/sda3 && cryptsetup luksOpen /dev/sda3 root
 
-cryptsetup luksFormat /dev/sda3 && cryptsetup luksOpen /dev/sda3 root && mkfs.ext4 -L root /dev/mapper/root
+mkfs.ext4 /dev/sda2 && mkfs.ext4 /dev/mapper/root
 
-mount LABEL=root /mnt && mkdir /mnt/boot && mount LABEL=boot /mnt/boot
+mount /dev/mapper/root /mnt && mkdir /mnt/boot && mount /dev/sda2 /mnt/boot
 
 pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
 	rsync tmux vim zsh git tcpdump nmap socat traceroute bind-tools whois pwgen \
 	open-vm-tools
 
-genfstab -p -L /mnt > /mnt/etc/fstab
+genfstab -p -U /mnt > /mnt/etc/fstab
 
 arch-chroot /mnt
 
@@ -66,7 +66,6 @@ grub-install /dev/sda
 ln -s -r /boot/grub/locale/en{\@quot,}.mo
 
 sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda3:root"/' /etc/default/grub
-sed -i -e '/^#GRUB_DISABLE_LINUX_UUID=/s/^#//' /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
 
