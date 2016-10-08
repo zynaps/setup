@@ -12,19 +12,19 @@ pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
 	rsync tmux vim zsh git tcpdump nmap socat traceroute bind-tools whois pwgen \
 	open-vm-tools
 
-genfstab -p -U /mnt > /mnt/etc/fstab
+genfstab -U /mnt > /mnt/etc/fstab
 
-arch-chroot /mnt
+arch-chroot /mnt /bin/zsh
 
 git clone https://github.com/zynaps/setup.git /tmp/setup
 
-echo 'darwin' > /etc/hostname
-
-ln -s -r /usr/share/zoneinfo/UTC /etc/localtime
+ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
 
 echo "LANG=$LANG" > /etc/locale.conf
+
+echo 'darwin' > /etc/hostname
 
 sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
@@ -32,15 +32,15 @@ mkinitcpio -p linux
 
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
 
-useradd -G users,wheel -m -s /usr/bin/zsh igor && passwd igor
+useradd -G users,wheel -m -s /bin/zsh igor && passwd igor
 mkdir -m 700 -p ~igor/.ssh && install -m 600 /tmp/setup/files/authorized_keys ~igor/.ssh
 chown -R igor:igor ~igor/.ssh
-
-sed -i -r -e '/^#PasswordAuthentication/s/^#//' -e '/^PasswordAuthentication/s/yes/no/' /etc/ssh/sshd_config
 
 passwd -l root
 
 echo -e "\n# A clock offset of any value will be accepted\ntinker panic 0" >> /etc/ntp.conf
+
+sed -i -r -e '/^#PasswordAuthentication/s/^#//' -e '/^PasswordAuthentication/s/yes/no/' /etc/ssh/sshd_config
 
 systemctl enable {ntpd,sshd}.service vmtoolsd.service
 
@@ -62,11 +62,7 @@ EOF
 netctl enable static
 
 grub-install /dev/sda
-
-ln -s -r /boot/grub/locale/en{\@quot,}.mo
-
-sed -i -e '/^GRUB_CMDLINE_LINUX=/s/""/"cryptdevice=\/dev\/sda3:root"/' /etc/default/grub
-
+sed -i -e '/^GRUB_CMDLINE_LINUX=/s/"$/ cryptdevice=\/dev\/sda3:root"/' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
 exit
