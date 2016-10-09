@@ -63,6 +63,7 @@ passwd -l root
 
 grub-install /dev/sda
 sed -i -e '/^GRUB_CMDLINE_LINUX=/s/"$/ cryptdevice=\/dev\/sda3:root"/' /etc/default/grub
+sed -i -e '/^GRUB_CMDLINE_LINUX=/s/"$/ transparent_hugepage=never"/' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
 exit
