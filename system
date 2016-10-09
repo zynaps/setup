@@ -43,11 +43,9 @@ EOF
 
 netctl enable static
 
-echo -e "\n# A clock offset of any value will be accepted\ntinker panic 0" >> /etc/ntp.conf
-
 sed -i -r -e '/^#?PasswordAuthentication/cPasswordAuthentication no' /etc/ssh/sshd_config
 
-systemctl enable {ntpd,sshd}.service vmtoolsd.service
+systemctl enable {ntpdate,ntpd,sshd}.service vmtoolsd.service
 
 sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
