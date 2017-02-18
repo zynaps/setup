@@ -9,7 +9,7 @@ mkfs.ext4 /dev/sda2 && mkfs.ext4 /dev/mapper/root
 mount /dev/mapper/root /mnt && mkdir /mnt/boot && mount /dev/sda2 /mnt/boot
 
 pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
-	rsync tmux vim zsh git tcpdump nmap socat traceroute bind-tools whois pwgen \
+	rsync tmux vim zsh git tcpdump nmap iperf3 socat traceroute bind-tools whois pwgen \
 	open-vm-tools
 
 genfstab -U /mnt > /mnt/etc/fstab
