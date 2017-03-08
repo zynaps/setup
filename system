@@ -16,7 +16,7 @@ genfstab -U /mnt > /mnt/etc/fstab
 
 arch-chroot /mnt /bin/zsh
 
-git clone https://github.com/zynaps/setup.git /tmp/setup
+git clone --depth 1 https://github.com/zynaps/setup.git /tmp/setup
 
 ln -s /usr/share/zoneinfo/UTC /etc/localtime
 

@@ -1,6 +1,6 @@
-git clone https://github.com/zynaps/setup.git /tmp/setup
+git clone --depth 1 https://github.com/zynaps/setup.git /tmp/setup
 
-git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+git clone --depth 1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 sed -i -r -e '/^#plugins=/s/^#//' -e '/^plugins=/s/\)$/ bundler\)/' ~/.zshrc
 sed -i -e '/^ZSH_THEME=/s/robbyrussell/gentoo/' ~/.zshrc
@@ -36,7 +36,7 @@ for plugin in \
   https://github.com/ntpeters/vim-better-whitespace.git \
   https://github.com/now/vim-restore-position.git
 do
-  git clone $plugin ~/.vim/bundle/`basename $plugin` || (echo 'FAIL' && break)
+  git clone --depth 1 $plugin ~/.vim/bundle/`basename $plugin` || (echo 'FAIL' && break)
 done
 cp /tmp/setup/files/vimrc ~/.vimrc
 vim -c 'call pathogen#helptags()|quit'
