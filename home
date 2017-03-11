@@ -2,21 +2,8 @@ git clone --depth 1 https://github.com/zynaps/setup.git /tmp/setup
 
 git clone --depth 1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
-sed -i -r -e '/^#plugins=/s/^#//' -e '/^plugins=/s/\)$/ bundler\)/' ~/.zshrc
+install -m 0644 /tmp/setup/files/oh-my-zsh/*.zsh ~/.oh-my-zsh/custom
 sed -i -e '/^ZSH_THEME=/s/robbyrussell/gentoo/' ~/.zshrc
-echo "alias sudo='sudo -E'" > ~/.oh-my-zsh/custom/aliases.zsh
-echo "alias l='ls -lA'" >> ~/.oh-my-zsh/custom/aliases.zsh
-echo "bindkey '^U' backward-kill-line" > ~/.oh-my-zsh/custom/key-bindings.zsh
-echo "setopt noautomenu" > ~/.oh-my-zsh/custom/completion.zsh
-
-echo -e "\n# One editor for all cases\nexport EDITOR=vim" >> ~/.zshrc
-
-cat << EOF >> ~/.zshrc
-
-# Arch Linux way to manage gems
-export GEM_HOME=\$(ruby -rubygems -e "puts Gem.user_dir")
-export PATH=\$GEM_HOME/bin:\$PATH
-EOF
 
 cp /tmp/setup/files/tmux.conf ~/.tmux.conf
 
