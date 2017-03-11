@@ -16,8 +16,6 @@ genfstab -U /mnt > /mnt/etc/fstab
 
 arch-chroot /mnt /bin/zsh
 
-git clone --depth 1 https://github.com/zynaps/setup.git /tmp/setup
-
 ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
@@ -53,11 +51,7 @@ mkinitcpio -p linux
 
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
 
-useradd -G users,wheel -m -s /bin/zsh igor && passwd igor
-mkdir -m 700 -p ~igor/.ssh && install -m 600 /tmp/setup/files/authorized_keys ~igor/.ssh
-chown -R igor:igor ~igor/.ssh
-
-passwd -l root
+useradd -G users,wheel -m -s /bin/zsh igor && passwd igor && passwd -l root
 
 grub-install /dev/sda
 sed -i -e '/^GRUB_CMDLINE_LINUX=/s/"$/ cryptdevice=\/dev\/sda3:root"/' /etc/default/grub
