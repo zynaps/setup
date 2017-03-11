@@ -26,4 +26,4 @@ do
   git clone --depth 1 $plugin ~/.vim/bundle/`basename $plugin` || (echo 'FAIL' && break)
 done
 cp /tmp/setup/files/vimrc ~/.vimrc
-vim -c 'call pathogen#helptags()|quit'
+vim -T dumb -es -c 'execute pathogen#helptags()' -c 'quit'
