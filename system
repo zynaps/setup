@@ -8,7 +8,7 @@ mkfs.ext4 /dev/sda2 && mkfs.ext4 /dev/mapper/root
 
 mount /dev/mapper/root /mnt && mkdir /mnt/boot && mount /dev/sda2 /mnt/boot
 
-pacstrap /mnt base base-devel python2 ruby grub ntp openssh \
+pacstrap /mnt base base-devel python2 ruby grub ntp openssh htop lsof \
 	rsync tmux vim zsh git tcpdump nmap iperf3 socat traceroute bind-tools whois pwgen \
 	open-vm-tools
 
