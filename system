@@ -18,6 +18,8 @@ arch-chroot /mnt /bin/zsh
 
 ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
+hwclock --systohc
+
 sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
 
 echo "LANG=$LANG" > /etc/locale.conf
