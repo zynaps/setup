@@ -47,7 +47,7 @@ sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
 mkinitcpio -p linux
 
-echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99root)
+echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99_wheel_nopasswd)
 
 useradd -G users,wheel -m -s /bin/zsh igor && passwd igor && passwd -l root
 
