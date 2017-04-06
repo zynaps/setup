@@ -18,9 +18,9 @@ arch-chroot /mnt /bin/zsh
 
 hwclock --systohc
 
-sed -i -r -e "/^#$LANG/s/^#//" /etc/locale.gen && locale-gen
+sed -i -r -e "/^#${LANG}/s/^#//" /etc/locale.gen && locale-gen
 
-echo "LANG=$LANG" > /etc/locale.conf
+echo "LANG=${LANG}" > /etc/locale.conf
 
 echo 'darwin' > /etc/hostname
 
