@@ -9,8 +9,7 @@ mkfs.ext4 /dev/sda2 && mkfs.ext4 /dev/mapper/root
 mount /dev/mapper/root /mnt && mkdir /mnt/boot && mount /dev/sda2 /mnt/boot
 
 pacstrap /mnt base base-devel python2 ruby grub ntp openssh htop lsof \
-	rsync tmux vim zsh git tcpdump nmap iperf3 socat traceroute bind-tools whois pwgen \
-	open-vm-tools
+    rsync tmux vim zsh git tcpdump nmap iperf3 socat traceroute bind-tools whois pwgen
 
 genfstab -U /mnt > /mnt/etc/fstab
 
@@ -41,7 +40,22 @@ EOF
 
 netctl enable static
 
-systemctl enable {ntpdate,ntpd,sshd}.service vmtoolsd.service
+systemctl enable {ntpdate,ntpd,sshd}.service
+
+case `systemd-detect-virt --vm` in
+    vmware)
+        pacman -S open-vm-tools
+        systemctl enable vmtoolsd.service
+    ;;
+    oracle)
+        pacman -S virtualbox-guest-utils-nox virtualbox-guest-modules-arch
+        systemctl enable vboxservice.service
+    ;;
+    qemu)
+        pacman -S qemu-guest-agent
+        systemctl enable qemu-ga.service
+    ;;
+esac
 
 sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
 
