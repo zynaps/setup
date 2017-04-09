@@ -3,7 +3,7 @@ systemctl enable iptables.service
 
 pacman -S openvpn
 cp /etc/openvpn/easy-rsa/keys/{ca.crt,server.{crt,key},dh2048.pem,ta.key} /etc/openvpn/server
-install -m 644 /tmp/setup/files/openvpn/server.conf /etc/openvpn/server
+install -m 0644 /tmp/setup/files/openvpn/server.conf /etc/openvpn/server
 iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o ens+ -j MASQUERADE
 iptables -A INPUT -i tun+ -j ACCEPT
 iptables -A FORWARD -i tun+ -j ACCEPT

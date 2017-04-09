@@ -13,16 +13,16 @@ systemctl enable redis.service
 
 pacman -S nginx
 mkdir -p /etc/nginx/sites.d
-install -m 644 /tmp/setup/files/nginx.conf /etc/nginx
+install -m 0644 /tmp/setup/files/nginx.conf /etc/nginx
 systemctl enable nginx.service
 
 GEM_HOME=`ruby -rubygems -e "puts Gem.default_dir"` gem install bundler --no-user-install
 
-install -m 644 /tmp/setup/files/unicorn@.service /etc/systemd/system
+install -m 0644 /tmp/setup/files/unicorn@.service /etc/systemd/system
 
-install -m 644 /tmp/setup/files/resque_scheduler@.service /etc/systemd/system
+install -m 0644 /tmp/setup/files/resque_scheduler@.service /etc/systemd/system
 
-install -m 644 /tmp/setup/files/resque_workers@.service /etc/systemd/system
+install -m 0644 /tmp/setup/files/resque_workers@.service /etc/systemd/system
 
 pacman -S gitolite
 cp /tmp/setup/files/authorized_keys /var/lib/gitolite/zynaps.pub
