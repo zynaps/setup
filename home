@@ -12,6 +12,7 @@ curl -Ss -L https://www.gitignore.io/api/vim,macos,linux -o ~/.gitignore
 git config --global user.name 'Igor Vinokurov'
 git config --global user.email zynaps@zynaps.ru
 git config --global color.ui auto
+git config --global core.pager 'less --quit-if-one-screen --no-init'
 git config --global core.excludesfile ~/.gitignore
 git config --global push.default simple
 
