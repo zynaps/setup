@@ -5,6 +5,20 @@ sudo -i -u postgres initdb -A md5 --pwfile=${PWFILE} /var/lib/postgres/data
 sed -i -e 's/^/*:*:*:postgres:/' ${PWFILE} && mv ${PWFILE} /root/.pgpass && chown root:root /root/.pgpass
 systemctl enable postgresql.service
 
+pacman -S mariadb
+mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --skip-auth-anonymous-user
+systemctl start mariadb.service
+export MYSQL_PASSWORD=`pwgen -A1Bn 16`
+mysql -u root mysql << EOF
+UPDATE user SET password=PASSWORD('${MYSQL_PASSWORD}') WHERE user='root';
+DELETE FROM user WHERE user='root' AND host NOT IN ('localhost', '127.0.0.1', '::1');
+DELETE FROM db WHERE db='test' OR db='test\\_%';
+FLUSH PRIVILEGES;
+DROP DATABASE IF EXISTS test;
+EOF
+echo -n "[mysql]\nuser=root\npassword=${MYSQL_PASSWORD}\n" | (umask 0077 && cat > /root/.my.cnf)
+systemctl enable mariadb.service
+
 pacman -S redis
 echo "vm.overcommit_memory = 1" > /etc/sysctl.d/overcommit.conf
 echo "net.ipv4.tcp_max_syn_backlog = 512" > /etc/sysctl.d/tcp_max_syn_backlog.conf
