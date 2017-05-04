@@ -5,7 +5,8 @@ execute pathogen#infect()
 filetype plugin indent on
 
 syntax on
-colorscheme base16-tomorrow-night
+colorscheme base16-default-dark
+set background=dark
 
 set nomodeline
 set wildmode=longest,list
