@@ -3,6 +3,7 @@ git clone --depth 1 https://github.com/zynaps/setup /tmp/setup
 git clone --depth 1 https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
 cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 install -m 0644 /tmp/setup/files/oh-my-zsh/*.zsh ~/.oh-my-zsh/custom
+sed -i -r -e '/DISABLE_AUTO_UPDATE/s/^#\s?//' ~/.zshrc
 sed -i -e '/^ZSH_THEME=/s/robbyrussell/gentoo/' ~/.zshrc
 
 cp /tmp/setup/files/tmux.conf ~/.tmux.conf
