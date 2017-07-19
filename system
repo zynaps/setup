@@ -10,7 +10,7 @@ mount /dev/mapper/root /mnt && mkdir /mnt/boot && mount /dev/sda2 /mnt/boot
 
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
 curl -Ssf -L -o /etc/pacman.d/mirrorlist \
-  https://www.archlinux.org/mirrorlist/?protocol=http&use_mirror_status=on&country=RU
+  'https://www.archlinux.org/mirrorlist/?protocol=http&use_mirror_status=on&country=RU'
 sed -i -r -e '/^#?Server/s/^#//' /etc/pacman.d/mirrorlist
 
 pacstrap /mnt base grub openssh ntp base-devel python2 ruby \
