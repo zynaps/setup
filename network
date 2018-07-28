@@ -11,3 +11,9 @@ iptables -A FORWARD -i tun+ -j ACCEPT
 iptables-save > /etc/iptables/iptables.rules
 echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ip_forward.conf
 systemctl enable openvpn-server@server.service
+
+pacman -S tor
+install -m 0644 /tmp/setup/files/torrc /etc/tor
+iptables -t nat -A PREROUTING -i tun+ -p tcp -d 10.192.0.0/10 -j REDIRECT --to-ports 9040
+iptables-save > /etc/iptables/iptables.rules
+systemctl enable tor.service

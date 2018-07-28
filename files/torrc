@@ -1,0 +1,15 @@
+DNSPort 10.8.0.1:9053
+VirtualAddrNetworkIPv4 10.192.0.0/10
+AutomapHostsOnResolve 1
+
+TransPort 10.8.0.1:9040
+
+SocksPort 10.8.0.1:9050
+SocksPolicy accept 10.8.0.0/24
+SocksPolicy reject *
+
+ExcludeExitNodes {us},{au},{ca},{nz},{gb},{fr},{ru},{ua},{by}
+
+Log notice syslog
+
+DataDirectory /var/lib/tor
