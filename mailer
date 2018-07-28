@@ -1,5 +1,6 @@
 pacman -S postfix
 postconf mydomain=zynaps.ru
+postconf "`postconf mynetworks` 10.8.0.0/24"
 sed -i -r -e '/^#root/s/^#//' -e '/^root/s/you$/igor/' /etc/postfix/aliases
 postalias /etc/postfix/aliases
 echo "/^(zynaps(\+\w+)?|igor|(a|b)-\w+|(h|p)ostmaster)@zynaps.ru$/\tzynaps@gmail.com" > /etc/postfix/virtual
