@@ -1,4 +1,5 @@
 pacman -Syu postfix
+postconf inet_interfaces=loopback-only
 postconf mydomain=zynaps.ru
 postconf "`postconf mynetworks` 10.8.0.0/24"
 sed -i -r -e '/^#root/s/^#//' -e '/^root/s/you$/igor/' /etc/postfix/aliases
