@@ -1,10 +1,10 @@
-pacman -S postgresql
+pacman -Syu postgresql
 PWFILE=`mktemp` && pwgen -A1Bn 16 > ${PWFILE} && chown postgres:postgres ${PWFILE}
 sudo -i -u postgres initdb -A md5 --pwfile=${PWFILE} -D /var/lib/postgres/data
 sed -i -e 's/^/*:*:*:postgres:/' ${PWFILE} && mv ${PWFILE} /root/.pgpass && chown root:root /root/.pgpass
 systemctl enable postgresql.service
 
-pacman -S mariadb
+pacman -Syu mariadb
 mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --skip-auth-anonymous-user
 systemctl start mariadb.service
 export MYSQL_PASSWORD=`pwgen -A1Bn 16`
@@ -18,13 +18,13 @@ EOF
 echo -n "[mysql]\nuser=root\npassword=${MYSQL_PASSWORD}\n" | (umask 0077 && cat > /root/.my.cnf)
 systemctl enable mariadb.service
 
-pacman -S redis
+pacman -Syu redis
 echo "vm.overcommit_memory = 1" > /etc/sysctl.d/overcommit.conf
 echo "net.ipv4.tcp_max_syn_backlog = 512" > /etc/sysctl.d/tcp_max_syn_backlog.conf
 echo "net.core.somaxconn = 512" > /etc/sysctl.d/somaxconn.conf
 systemctl enable redis.service
 
-pacman -S nginx
+pacman -Syu nginx
 mkdir -p /etc/nginx/sites.d
 install -m 0644 /tmp/setup/files/nginx.conf /etc/nginx
 systemctl enable nginx.service
@@ -37,7 +37,7 @@ install -m 0644 /tmp/setup/files/resque_scheduler@.service /etc/systemd/system
 
 install -m 0644 /tmp/setup/files/resque_workers@.service /etc/systemd/system
 
-pacman -S gitolite
+pacman -Syu gitolite
 cp /tmp/setup/files/authorized_keys /var/lib/gitolite/zynaps.pub
 sudo -i -u gitolite gitolite setup -pk zynaps.pub
 rm /var/lib/gitolite/zynaps.pub
