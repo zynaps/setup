@@ -16,7 +16,7 @@ sed -i -r -e '/^#?Server/s/^#//' /etc/pacman.d/mirrorlist
 pacstrap /mnt \
     base pacman-contrib grub openssh ntp \
     base-devel python2 ruby ruby-rdoc ruby-bundler \
-    traceroute tcpdump nmap htop lsof iperf3 socat bind-tools whois \
+    traceroute tcpdump wireshark-cli nmap htop lsof iperf3 socat bind-tools whois \
     zsh tmux git vim rsync wget lftp pwgen bc
 
 genfstab -U /mnt > /mnt/etc/fstab
