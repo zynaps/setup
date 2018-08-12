@@ -19,9 +19,6 @@ echo -n "[mysql]\nuser=root\npassword=${MYSQL_PASSWORD}\n" | (umask 0077 && cat 
 systemctl enable mariadb.service
 
 pacman -Syu redis
-echo "vm.overcommit_memory = 1" > /etc/sysctl.d/overcommit.conf
-echo "net.ipv4.tcp_max_syn_backlog = 512" > /etc/sysctl.d/tcp_max_syn_backlog.conf
-echo "net.core.somaxconn = 512" > /etc/sysctl.d/somaxconn.conf
 systemctl enable redis.service
 
 pacman -Syu nginx
