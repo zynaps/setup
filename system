@@ -50,7 +50,9 @@ EOF
 
 netctl enable static
 
-systemctl enable {ntpdate,ntpd,sshd}.service paccache.timer
+cp /etc/iptables/empty.rules /etc/iptables/iptables.rules
+
+systemctl enable {iptables,ntpdate,ntpd,sshd}.service paccache.timer
 
 case `systemd-detect-virt --vm` in
     vmware)

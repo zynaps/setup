@@ -1,6 +1,3 @@
-cp /etc/iptables/{empty,iptables}.rules
-systemctl enable --now iptables.service
-
 pacman -Syu openvpn
 tar zxvf /tmp/setup/openvpn-keys.tgz -C /etc/openvpn
 cp /etc/openvpn/keys/{ca.crt,server.{crt,key},dh2048.pem,ta.key} /etc/openvpn/server
