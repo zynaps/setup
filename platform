@@ -25,3 +25,6 @@ pacman -Syu nginx
 mkdir -p /etc/nginx/{sites,conf}.d
 install -m 0644 /tmp/setup/files/nginx.conf /etc/nginx
 systemctl enable --now nginx.service
+
+pacman -Syu docker
+systemctl enable --now docker.service
