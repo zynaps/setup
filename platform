@@ -2,7 +2,7 @@ pacman -Syu postgresql
 PWFILE=`mktemp` && pwgen -A1Bn 16 > ${PWFILE} && chown postgres:postgres ${PWFILE}
 sudo -i -u postgres initdb -A md5 --pwfile=${PWFILE} -D /var/lib/postgres/data
 sed -i -e 's/^/*:*:*:postgres:/' ${PWFILE} && mv ${PWFILE} /root/.pgpass && chown root:root /root/.pgpass
-systemctl enable postgresql.service
+systemctl enable --now postgresql.service
 
 pacman -Syu mariadb
 mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --skip-auth-anonymous-user
@@ -19,7 +19,7 @@ echo -n "[mysql]\nuser=root\npassword=${MYSQL_PASSWORD}\n" | (umask 0077 && cat 
 systemctl enable mariadb.service
 
 pacman -Syu redis
-systemctl enable redis.service
+systemctl enable --now redis.service
 
 pacman -Syu nginx
 mkdir -p /etc/nginx/{sites,conf}.d

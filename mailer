@@ -8,4 +8,4 @@ echo "/^(zynaps(\+\w+)?|igor|(a|b)-\w+|(h|p)ostmaster)@zynaps.ru$/\tzynaps@gmail
 postmap /etc/postfix/virtual
 postconf virtual_alias_maps=regexp:/etc/postfix/virtual
 postconf virtual_alias_domains=zynaps.ru
-systemctl enable postfix.service
+systemctl enable --now postfix.service
