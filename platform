@@ -22,9 +22,9 @@ pacman -Syu redis
 systemctl enable redis.service
 
 pacman -Syu nginx
-mkdir -p /etc/nginx/sites.d
+mkdir -p /etc/nginx/{sites,conf}.d
 install -m 0644 /tmp/setup/files/nginx.conf /etc/nginx
-systemctl enable nginx.service
+systemctl enable --now nginx.service
 
 GEM_HOME=`ruby -rubygems -e "puts Gem.default_dir"` gem install bundler --no-user-install
 
