@@ -1,4 +1,4 @@
-ntpdate pool.ntp.org
+timedatectl set-ntp true
 
 sgdisk -Z -a 2048 -o -g -n 1:2048:+1M -t 1:ef02 -n 2::+512M -N 3 -p /dev/sda
 
@@ -37,22 +37,21 @@ export IF_NAME=`ip -4 route show to default | awk '{ print $5 }'`
 export IF_ADDRESS=`ip -4 -o addr show ${IF_NAME} | awk '{ print $4 }'`
 export IF_ROUTE=`ip -4 route show to default | awk '{ print $3 }'`
 
-cat << EOF > /etc/netctl/static
-Description='A basic static ethernet connection'
-Interface='${IF_NAME}'
-Connection=ethernet
-IP=static
-Address=('${IF_ADDRESS}')
-Gateway='${IF_ROUTE}'
-DNS=('8.8.8.8' '8.8.4.4')
-DNSDomain='zynaps.ru'
-EOF
+cat << EOF > /etc/systemd/network/wired.network
+[Match]
+Name=${IF_NAME}
 
-netctl enable static
+[Network]
+Address=${IF_ADDRESS}
+Gateway=${IF_ROUTE}
+Domains=zynaps.ru
+DNS=8.8.8.8
+DNS=8.8.4.4
+EOF
 
 cp /etc/iptables/empty.rules /etc/iptables/iptables.rules
 
-systemctl enable {iptables,ntpdate,ntpd,sshd}.service paccache.timer
+systemctl enable {systemd-{networkd,resolved,timesyncd},iptables,sshd}.service
 
 case `systemd-detect-virt --vm` in
     vmware)
@@ -83,5 +82,7 @@ sed -i -e '/^GRUB_CMDLINE_LINUX=/s/"$/ transparent_hugepage=never"/' /etc/defaul
 grub-mkconfig -o /boot/grub/grub.cfg
 
 exit
+
+ln -srf /mnt/run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
 
 umount -R /mnt
