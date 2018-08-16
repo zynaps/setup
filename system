@@ -14,10 +14,8 @@ curl -Ssf -L -o /etc/pacman.d/mirrorlist \
 sed -i -r -e '/^#?Server/s/^#//' /etc/pacman.d/mirrorlist
 
 pacstrap /mnt \
-    base pacman-contrib grub openssh ntp \
-    base-devel python2 ruby ruby-rdoc ruby-bundler \
-    traceroute tcpdump wireshark-cli nmap htop lsof iperf3 socat bind-tools whois \
-    zsh tmux git vim rsync wget lftp pwgen bc
+    base base-devel pacman-contrib grub openssh traceroute tcpdump iperf3 socat bind-tools \
+    zsh tmux git vim rsync wget
 
 genfstab -U /mnt > /mnt/etc/fstab
 
