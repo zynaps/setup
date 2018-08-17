@@ -1,5 +1,12 @@
 timedatectl set-ntp true
 
+export IF_NAME=`ip -4 route show to default | awk '{ print $5 }'`
+export IF_ADDRESS=`ip -4 -o addr show ${IF_NAME} | awk '{ print $4 }'`
+export IF_HOST=`echo ${IF_ADDRESS} | cut -d / -f 1`
+export IF_NETMASK=`ifconfig ${IF_NAME} | awk /netmask/'{ print $4 }'`
+export IF_ROUTE=`ip -4 route show to default | awk '{ print $3 }'`
+export IF_ROOT_KEY=`ssh-add -L | head -1`
+
 sgdisk -Z -a 2048 -o -g -n 1:2048:+1M -t 1:ef02 -n 2::+512M -N 3 -p /dev/sda
 
 cryptsetup luksFormat /dev/sda3 && cryptsetup luksOpen /dev/sda3 root
@@ -14,7 +21,7 @@ curl -Ssf -L -o /etc/pacman.d/mirrorlist \
 sed -i -r -e '/^#?Server/s/^#//' /etc/pacman.d/mirrorlist
 
 pacstrap /mnt \
-    base base-devel pacman-contrib grub openssh traceroute tcpdump iperf3 socat bind-tools \
+    base mkinitcpio-nfs-utils dropbear base-devel pacman-contrib grub openssh traceroute tcpdump iperf3 socat bind-tools \
     zsh tmux git vim rsync wget
 
 genfstab -U /mnt > /mnt/etc/fstab
@@ -31,10 +38,6 @@ echo "net.core.somaxconn = 512" > /etc/sysctl.d/somaxconn.conf
 
 sed -i -r -e "/^#${LANG}/s/^#//" /etc/locale.gen && locale-gen
 
-export IF_NAME=`ip -4 route show to default | awk '{ print $5 }'`
-export IF_ADDRESS=`ip -4 -o addr show ${IF_NAME} | awk '{ print $4 }'`
-export IF_ROUTE=`ip -4 route show to default | awk '{ print $3 }'`
-
 cat << EOF > /etc/systemd/network/wired.network
 [Match]
 Name=${IF_NAME}
@@ -48,6 +51,8 @@ DNS=8.8.4.4
 EOF
 
 cp /etc/iptables/empty.rules /etc/iptables/iptables.rules
+
+ssh-keygen -A
 
 systemctl enable {systemd-{networkd,resolved,timesyncd},iptables,sshd}.service
 
@@ -66,18 +71,33 @@ case `systemd-detect-virt --vm` in
     ;;
 esac
 
-sed -i -e '/^HOOKS=/s/filesystems/encrypt filesystems/' /etc/mkinitcpio.conf
-
-mkinitcpio -p linux
-
 echo '%wheel ALL=(ALL) NOPASSWD: ALL' | (umask 0227 && cat > /etc/sudoers.d/99_wheel_nopasswd)
 
 useradd -G users,wheel -m -s /bin/zsh igor && passwd igor && passwd -l root
 
-grub-install /dev/sda
-sed -i -e '/^GRUB_CMDLINE_LINUX=/s/"$/ cryptdevice=\/dev\/sda3:root"/' /etc/default/grub
-sed -i -e '/^GRUB_CMDLINE_LINUX=/s/"$/ transparent_hugepage=never"/' /etc/default/grub
-grub-mkconfig -o /boot/grub/grub.cfg
+mkdir -p /etc/dropbear
+echo $IF_ROOT_KEY | (umask 0077 && cat > /etc/dropbear/root_key)
+
+sed -i -e '/^HOOKS=/s/filesystems/netconf dropbear encryptssh filesystems/' /etc/mkinitcpio.conf
+
+sudo -s -u igor
+cd /tmp
+for pkgaur in netconf dropbear utils; do
+  git clone https://aur.archlinux.org/mkinitcpio-$pkgaur.git
+  cd mkinitcpio-$pkgaur
+  makepkg -sc --needed --noconfirm PKGDEST='/tmp'
+  cd ..
+done
+exit
+pacman -U --noconfirm /tmp/mkinitcpio-*.pkg.tar.xz
+
+sed -i \
+  -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ cryptdevice=\/dev\/sda3:root\"/" \
+  -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ ip=${IF_HOST}::${IF_ROUTE}:${IF_NETMASK}::eth0:none\"/" \
+  -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ transparent_hugepage=never\"/" \
+  -e "/^GRUB_CMDLINE_LINUX=/s/=\" /=\"/" /etc/default/grub
+
+grub-install /dev/sda && grub-mkconfig -o /boot/grub/grub.cfg
 
 exit
 
