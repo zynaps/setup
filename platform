@@ -1,10 +1,10 @@
-pacman -Syu postgresql
+pacman -Syu --needed postgresql
 PWFILE=`mktemp` && pwgen -A1Bn 16 > ${PWFILE} && chown postgres:postgres ${PWFILE}
 sudo -i -u postgres initdb -A md5 --pwfile=${PWFILE} -D /var/lib/postgres/data
 sed -i -e 's/^/*:*:*:postgres:/' ${PWFILE} && mv ${PWFILE} /root/.pgpass && chown root:root /root/.pgpass
 systemctl enable --now postgresql.service
 
-pacman -Syu mariadb
+pacman -Syu --needed mariadb
 mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --skip-auth-anonymous-user
 systemctl start mariadb.service
 export MYSQL_PASSWORD=`pwgen -A1Bn 16`
@@ -18,14 +18,14 @@ EOF
 echo -n "[mysql]\nuser=root\npassword=${MYSQL_PASSWORD}\n" | (umask 0077 && cat > /root/.my.cnf)
 systemctl enable mariadb.service
 
-pacman -Syu redis
+pacman -Syu --needed redis
 systemctl enable --now redis.service
 
-pacman -Syu nginx
+pacman -Syu --needed nginx
 install -m 0644 -D -t /etc/nginx/conf.d /tmp/setup/files/nginx/conf.d/*
 mkdir -p /etc/nginx/sites.d
 install -m 0644 /tmp/setup/files/nginx/nginx.conf /etc/nginx
 systemctl enable --now nginx.service
 
-pacman -Syu docker
+pacman -Syu --needed docker
 systemctl enable --now docker.service

@@ -1,4 +1,4 @@
-pacman -Syu postfix
+pacman -Syu --needed postfix
 postconf inet_interfaces=loopback-only
 postconf mydomain=zynaps.ru
 postconf "`postconf mynetworks` 10.8.0.0/24"

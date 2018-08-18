@@ -1,5 +1,4 @@
-timedatectl set-ntp true
-
+export IF_HOSTNAME='darwin'
 export IF_NAME=`ip -4 route show to default | awk '{ print $5 }'`
 export IF_ADDRESS=`ip -4 -o addr show ${IF_NAME} | awk '{ print $4 }'`
 export IF_HOST=`echo ${IF_ADDRESS} | cut -d / -f 1`
@@ -7,15 +6,13 @@ export IF_NETMASK=`ifconfig ${IF_NAME} | awk /netmask/'{ print $4 }'`
 export IF_ROUTE=`ip -4 route show to default | awk '{ print $3 }'`
 export IF_ROOT_KEY=`ssh-add -L | head -1`
 
+timedatectl set-ntp true
+
 sgdisk -Z -a 2048 -o -g -n 1:2048:+1M -t 1:ef02 -n 2::+512M -N 3 -p /dev/sda
-
 cryptsetup luksFormat /dev/sda3 && cryptsetup luksOpen /dev/sda3 root
-
 mkfs.ext4 /dev/sda2 && mkfs.ext4 /dev/mapper/root
+mount /dev/mapper/root /mnt && mkdir -p /mnt/boot && mount /dev/sda2 /mnt/boot
 
-mount /dev/mapper/root /mnt && mkdir /mnt/boot && mount /dev/sda2 /mnt/boot
-
-mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
 curl -Ssf -L -o /etc/pacman.d/mirrorlist \
   'https://www.archlinux.org/mirrorlist/?protocol=http&use_mirror_status=on&country=RU'
 sed -i -r -e '/^#?Server/s/^#//' /etc/pacman.d/mirrorlist
@@ -26,7 +23,7 @@ pacstrap /mnt \
 
 genfstab -U /mnt > /mnt/etc/fstab
 
-systemd-firstboot --root=/mnt --hostname='darwin' --timezone='UTC' --locale=${LANG}
+systemd-firstboot --root=/mnt --hostname=${IF_HOSTNAME} --timezone='UTC' --locale=${LANG}
 
 arch-chroot /mnt /bin/zsh
 
@@ -92,10 +89,10 @@ exit
 pacman -U --noconfirm /tmp/mkinitcpio-*.pkg.tar.xz
 
 sed -i \
-  -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ cryptdevice=\/dev\/sda3:root\"/" \
-  -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ ip=${IF_HOST}::${IF_ROUTE}:${IF_NETMASK}::eth0:none\"/" \
-  -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ transparent_hugepage=never\"/" \
-  -e "/^GRUB_CMDLINE_LINUX=/s/=\" /=\"/" /etc/default/grub
+    -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ cryptdevice=\/dev\/sda3:root\"/" \
+    -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ ip=${IF_HOST}::${IF_ROUTE}:${IF_NETMASK}::eth0:none\"/" \
+    -e "/^GRUB_CMDLINE_LINUX=/s/\"$/ transparent_hugepage=never\"/" \
+  /etc/default/grub
 
 grub-install /dev/sda && grub-mkconfig -o /boot/grub/grub.cfg
 
