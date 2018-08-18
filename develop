@@ -1,0 +1,1 @@
+pacman -Syu --needed ruby ruby-rdoc ruby-bundler htop lsof
