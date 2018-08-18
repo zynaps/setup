@@ -21,6 +21,13 @@ pacstrap /mnt \
     base mkinitcpio-nfs-utils dropbear base-devel pacman-contrib grub openssh traceroute tcpdump iperf3 socat bind-tools \
     zsh tmux git vim rsync wget
 
+sgdisk -Z -a 2048 -o -g -N 0 -p /dev/sdb
+dd bs=512 count=4 if=/dev/urandom of=/mnt/etc/data-keyfile && chmod 400 /mnt/etc/data-keyfile
+cryptsetup luksFormat --key-file /mnt/etc/data-keyfile /dev/sdb1 && cryptsetup luksOpen --key-file /mnt/etc/data-keyfile /dev/sdb1 data
+mkfs.ext4 /dev/mapper/data
+mkdir -p /mnt/srv/data && mount /dev/mapper/data /mnt/srv/data
+echo "# /dev/mapper/data\ndata\tUUID=`lsblk -drno UUID /dev/sdb1`\t/etc/data-keyfile" > /mnt/etc/crypttab
+
 genfstab -U /mnt > /mnt/etc/fstab
 
 systemd-firstboot --root=/mnt --hostname=${IF_HOSTNAME} --timezone='UTC' --locale=${LANG}
