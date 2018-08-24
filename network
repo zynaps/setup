@@ -1,3 +1,19 @@
+export IF_WG_KEY=''
+export IF_WG_HOST=''
+
+pacman -Syu --needed wireguard-tools linux-headers
+
+install -m 0640 -o root -g systemd-network /tmp/setup/files/wireguard/wg0.* /etc/systemd/network/
+
+sed -r -i -e 's#^(PrivateKey=)#\1'"${IF_WG_KEY}"'#' /etc/systemd/network/wg0.netdev
+sed -r -i -e 's#^(Address=)#\1'"${IF_WG_HOST}"'/24#' /etc/systemd/network/wg0.network
+
+iptables -t nat -A POSTROUTING -s 10.7.0.0/24 -o ens+ -j MASQUERADE
+iptables -A INPUT -i wg+ -j ACCEPT
+iptables -A FORWARD -i wg+ -j ACCEPT
+iptables-save > /etc/iptables/iptables.rules
+echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ip_forward.conf
+
 pacman -Syu --needed openvpn
 tar zxvf /tmp/setup/openvpn-keys.tgz -C /etc/openvpn
 cp /etc/openvpn/keys/{ca.crt,server.{crt,key},dh2048.pem,ta.key} /etc/openvpn/server
