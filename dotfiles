@@ -1,5 +1,8 @@
+# bootstrap
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 git clone --bare git@github.com:/zynaps/dotfiles.git $HOME/.dotfiles
 dotfiles config --local status.showUntrackedFiles no
-cd $HOME
-dotfiles checkout && dotfiles submodule init && dotfiles submodule update
+dotfiles checkout && dotfiles submodule update --init --remote --recursive
+
+# update
+dotfiles pull && dotfiles submodule update --init --remote --recursive
